@@ -14,6 +14,7 @@
 
 @implementation Plant
 @synthesize grow;
+@synthesize currentlife;
 
 -(id) initWithPlantImage
 {
@@ -21,6 +22,7 @@
     if ((self = [super initWithFile:@"transparent.png"]))
     {
         grow = 0;
+        currentlife = 0;
         //properties work internally just like normal instance variables
     }
     return self;

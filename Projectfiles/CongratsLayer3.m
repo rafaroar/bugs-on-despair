@@ -1,27 +1,33 @@
 //
-//  CongratsLayer.m
+//  CongratsLayer3.m
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 23/01/13.
+//  Created by Andrea Rodríguez Arguedas on 24/01/13.
 //
 //
 
-#import "CongratsLayer.h"
+#import "CongratsLayer3.h"
 #import "Level1.h"
 #import "Level2.h"
+#import "Level3.h"
 CCSprite *congrats;
 CCSprite *playagain;
 CCSprite *fly;
+CCSprite *bee;
 CCAction *move;
+CCAction *move2;
 NSMutableArray *flies;
+NSMutableArray *bees;
 int counte;
 int ranx;
 int rany;
+int beex;
+int beey;
 
-@interface CongratsLayer (PrivateMethods)
+@interface CongratsLayer3 (PrivateMethods)
 @end
 
-@implementation CongratsLayer
+@implementation CongratsLayer3
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
@@ -35,7 +41,7 @@ int rany;
     //big green rectangle
     CGPoint c = ccp(0,0); //lower-left corner
     CGPoint d = ccp(WIDTH_GAME,HEIGHT_WINDOW); //upper-right corner
-    ccColor4F color = ccc4f(0.2, 0.6, 0.2, 1);
+    ccColor4F color = ccc4f(0.3, 0.4, 0.5, 1);
     ccDrawSolidRect(c, d, color);
 }
 
@@ -43,7 +49,7 @@ int rany;
 {
 	if ((self = [super init]))
 	{
-        congrats = [CCSprite spriteWithFile:@"congrats.png"];
+        congrats = [CCSprite spriteWithFile:@"congrats3.png"];
         congrats.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
         [congrats setScale:0.7f];
         [self addChild:congrats z:1];
@@ -63,12 +69,19 @@ int rany;
                                                                    target:self
                                                                  selector:@selector(gotolevel2:)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, nil];
+        CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
+                                                            selectedImage: @"level3.png"
+                                                                   target:self
+                                                                 selector:@selector(gotolevel3:)];
+        
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
         menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 80);
         menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 140);
+        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 200);
         myMenu.position = ccp(0, 0);
         [menuItem1 setScale:0.9f];
         [menuItem2 setScale:0.9f];
+        [menuItem3 setScale:0.9f];
         [self addChild: myMenu z:1];
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
@@ -87,9 +100,27 @@ int rany;
         [fly runAction:move];
         [self addChild:fly z:3];
         
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"bee.plist"];
+        CCSpriteBatchNode *spriteSheet2 = [CCSpriteBatchNode batchNodeWithFile:@"bee.png"];
+        [self addChild:spriteSheet2];
+        
+        bees = [NSMutableArray array];
+        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee1.png"]];
+        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee2.png"]];
+        
+        bee = [CCSprite spriteWithSpriteFrameName:@"bee1.png"];
+        bee.position = ccp( WIDTH_GAME/2 + 40, HEIGHT_GAME/2 + Y_OFF_SET);
+        [bee setScale:0.4f];
+        CCAnimation *moving2 = [CCAnimation animationWithFrames: bees delay:0.1f];
+        move2 = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving2 restoreOriginalFrame:NO]];
+        [bee runAction:move2];
+        [self addChild:bee z:3];
+        
         counte=0;
         ranx=0;
         rany=0;
+        beex=0;
+        beey=0;
         
         [self scheduleUpdate];
     }
@@ -139,6 +170,46 @@ int rany;
         fly.position = ccp( fly.position.x, 459 );
         rany = -20;
     }
+    
+    //move bee
+    beex = beex + 10 - arc4random()%21;
+    beey = beey + 10 - arc4random()%21;
+    if (ran==6)
+    {
+        beex = beex + 50 - arc4random()%101;
+        beey = beey + 50 - arc4random()%101;
+    }
+    beex = beex - (bee.position.x - 160)/50;
+    beey = beey - (bee.position.y - 280)/50;
+    if ((bee.position.x > 140) && (bee.position.x < 180) && (bee.position.y > 260) && (bee.position.y < 300))
+    {
+        beex = beex + (bee.position.x - 160)/5;
+        beey = beey + (bee.position.y - 280)/5;
+    }
+    if ((bee.position.x > 20) && (bee.position.x < 300) && (bee.position.y > 100) && (bee.position.y < 460))
+    {
+        bee.position = ccp( bee.position.x + beex*delta/3, bee.position.y + beey*delta/3);
+    }
+    if (bee.position.x >= 300)
+    {
+        bee.position = ccp( 299, bee.position.y );
+        beex = -20;
+    }
+    if (bee.position.x <= 20)
+    {
+        bee.position = ccp( 21, bee.position.y );
+        beex = 20;
+    }
+    if (bee.position.y <= 100)
+    {
+        bee.position = ccp( bee.position.x, 101 );
+        beey = 20;
+    }
+    if (bee.position.y >= 460)
+    {
+        fly.position = ccp( bee.position.x, 459 );
+        beey = -20;
+    }
 }
 
 -(void) gotolevel1: (CCMenuItem  *) menuItem
@@ -149,6 +220,11 @@ int rany;
 -(void) gotolevel2: (CCMenuItem  *) menuItem
 {
     [[CCDirector sharedDirector] replaceScene: [[Level2 alloc] init]];
+}
+
+-(void) gotolevel3: (CCMenuItem  *) menuItem
+{
+    [[CCDirector sharedDirector] replaceScene: [[Level3 alloc] init]];
 }
 
 @end

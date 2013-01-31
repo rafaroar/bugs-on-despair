@@ -10,5 +10,6 @@
 
 @interface Plant : CCSprite
 @property int grow;
+@property int currentlife;
 -(id) initWithPlantImage;
 @end

@@ -7,6 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F46EED716B09EA400456009 /* Level2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F46EED616B09EA400456009 /* Level2.m */; };
+		3F46EEED16B1FFA100456009 /* bee1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EED816B1FFA000456009 /* bee1.png */; };
+		3F46EEEE16B1FFA100456009 /* bee2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EED916B1FFA000456009 /* bee2.png */; };
+		3F46EEEF16B1FFA100456009 /* carniv1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDA16B1FFA000456009 /* carniv1.png */; };
+		3F46EEF016B1FFA100456009 /* carniv2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDB16B1FFA000456009 /* carniv2.png */; };
+		3F46EEF116B1FFA100456009 /* carniv3.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDC16B1FFA000456009 /* carniv3.png */; };
+		3F46EEF216B1FFA100456009 /* carniv4.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDD16B1FFA000456009 /* carniv4.png */; };
+		3F46EEF316B1FFA100456009 /* carniv5.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDE16B1FFA000456009 /* carniv5.png */; };
+		3F46EEF416B1FFA100456009 /* carniv6.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEDF16B1FFA000456009 /* carniv6.png */; };
+		3F46EEF516B1FFA100456009 /* carniv7.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE016B1FFA000456009 /* carniv7.png */; };
+		3F46EEF616B1FFA100456009 /* carniv8.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE116B1FFA000456009 /* carniv8.png */; };
+		3F46EEF716B1FFA100456009 /* carniv9.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE216B1FFA000456009 /* carniv9.png */; };
+		3F46EEF816B1FFA100456009 /* congrats2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE316B1FFA000456009 /* congrats2.png */; };
+		3F46EEF916B1FFA100456009 /* congrats3.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE416B1FFA000456009 /* congrats3.png */; };
+		3F46EEFA16B1FFA100456009 /* level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE516B1FFA000456009 /* level1.png */; };
+		3F46EEFB16B1FFA100456009 /* level2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE616B1FFA000456009 /* level2.png */; };
+		3F46EEFC16B1FFA100456009 /* level3.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE716B1FFA000456009 /* level3.png */; };
+		3F46EEFD16B1FFA100456009 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE816B1FFA100456009 /* pause.png */; };
+		3F46EEFE16B1FFA100456009 /* redbug1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEE916B1FFA100456009 /* redbug1.png */; };
+		3F46EEFF16B1FFA100456009 /* redbug2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEEA16B1FFA100456009 /* redbug2.png */; };
+		3F46EF0016B1FFA100456009 /* resume.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEEB16B1FFA100456009 /* resume.png */; };
+		3F46EF0116B1FFA100456009 /* scissors.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EEEC16B1FFA100456009 /* scissors.png */; };
+		3F46EF0316B2128600456009 /* redscissors.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EF0216B2128600456009 /* redscissors.png */; };
+		3F46EF0616B213D600456009 /* CongratsLayer2.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F46EF0516B213D600456009 /* CongratsLayer2.m */; };
+		3F46EF0916B2149A00456009 /* Level3.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F46EF0816B2149900456009 /* Level3.m */; };
+		3F46EF0C16B216A000456009 /* CongratsLayer3.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F46EF0B16B216A000456009 /* CongratsLayer3.m */; };
+		3F46EF0F16B2181800456009 /* bee.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EF0D16B2181800456009 /* bee.plist */; };
+		3F46EF1016B2181800456009 /* bee.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F46EF0E16B2181800456009 /* bee.png */; };
 		3FA61EE116AE758000A65E8F /* GameOverLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA61EE016AE758000A65E8F /* GameOverLayer.m */; };
 		3FA61EE416AF31F300A65E8F /* Plant.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA61EE316AF31F300A65E8F /* Plant.m */; };
 		3FA61EEE16AF69BC00A65E8F /* carnivore_g.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA61EE916AF69BC00A65E8F /* carnivore_g.png */; };
@@ -89,6 +117,38 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F46EED516B09EA400456009 /* Level2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level2.h; sourceTree = "<group>"; };
+		3F46EED616B09EA400456009 /* Level2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level2.m; sourceTree = "<group>"; };
+		3F46EED816B1FFA000456009 /* bee1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bee1.png; sourceTree = "<group>"; };
+		3F46EED916B1FFA000456009 /* bee2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bee2.png; sourceTree = "<group>"; };
+		3F46EEDA16B1FFA000456009 /* carniv1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv1.png; sourceTree = "<group>"; };
+		3F46EEDB16B1FFA000456009 /* carniv2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv2.png; sourceTree = "<group>"; };
+		3F46EEDC16B1FFA000456009 /* carniv3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv3.png; sourceTree = "<group>"; };
+		3F46EEDD16B1FFA000456009 /* carniv4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv4.png; sourceTree = "<group>"; };
+		3F46EEDE16B1FFA000456009 /* carniv5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv5.png; sourceTree = "<group>"; };
+		3F46EEDF16B1FFA000456009 /* carniv6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv6.png; sourceTree = "<group>"; };
+		3F46EEE016B1FFA000456009 /* carniv7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv7.png; sourceTree = "<group>"; };
+		3F46EEE116B1FFA000456009 /* carniv8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv8.png; sourceTree = "<group>"; };
+		3F46EEE216B1FFA000456009 /* carniv9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carniv9.png; sourceTree = "<group>"; };
+		3F46EEE316B1FFA000456009 /* congrats2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = congrats2.png; sourceTree = "<group>"; };
+		3F46EEE416B1FFA000456009 /* congrats3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = congrats3.png; sourceTree = "<group>"; };
+		3F46EEE516B1FFA000456009 /* level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level1.png; sourceTree = "<group>"; };
+		3F46EEE616B1FFA000456009 /* level2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level2.png; sourceTree = "<group>"; };
+		3F46EEE716B1FFA000456009 /* level3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level3.png; sourceTree = "<group>"; };
+		3F46EEE816B1FFA100456009 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		3F46EEE916B1FFA100456009 /* redbug1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redbug1.png; sourceTree = "<group>"; };
+		3F46EEEA16B1FFA100456009 /* redbug2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redbug2.png; sourceTree = "<group>"; };
+		3F46EEEB16B1FFA100456009 /* resume.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = resume.png; sourceTree = "<group>"; };
+		3F46EEEC16B1FFA100456009 /* scissors.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scissors.png; sourceTree = "<group>"; };
+		3F46EF0216B2128600456009 /* redscissors.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redscissors.png; sourceTree = "<group>"; };
+		3F46EF0416B213D600456009 /* CongratsLayer2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CongratsLayer2.h; sourceTree = "<group>"; };
+		3F46EF0516B213D600456009 /* CongratsLayer2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CongratsLayer2.m; sourceTree = "<group>"; };
+		3F46EF0716B2149900456009 /* Level3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level3.h; sourceTree = "<group>"; };
+		3F46EF0816B2149900456009 /* Level3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level3.m; sourceTree = "<group>"; };
+		3F46EF0A16B216A000456009 /* CongratsLayer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CongratsLayer3.h; sourceTree = "<group>"; };
+		3F46EF0B16B216A000456009 /* CongratsLayer3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CongratsLayer3.m; sourceTree = "<group>"; };
+		3F46EF0D16B2181800456009 /* bee.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = bee.plist; sourceTree = "<group>"; };
+		3F46EF0E16B2181800456009 /* bee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bee.png; sourceTree = "<group>"; };
 		3FA61EDF16AE758000A65E8F /* GameOverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverLayer.h; sourceTree = "<group>"; };
 		3FA61EE016AE758000A65E8F /* GameOverLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameOverLayer.m; sourceTree = "<group>"; };
 		3FA61EE216AF31F300A65E8F /* Plant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plant.h; sourceTree = "<group>"; };
@@ -342,6 +402,14 @@
 				3FA61F0A16AFB7DA00A65E8F /* StartLayer.m */,
 				3FA61F0E16AFBD8100A65E8F /* CongratsLayer.h */,
 				3FA61F0F16AFBD8100A65E8F /* CongratsLayer.m */,
+				3F46EED516B09EA400456009 /* Level2.h */,
+				3F46EED616B09EA400456009 /* Level2.m */,
+				3F46EF0416B213D600456009 /* CongratsLayer2.h */,
+				3F46EF0516B213D600456009 /* CongratsLayer2.m */,
+				3F46EF0716B2149900456009 /* Level3.h */,
+				3F46EF0816B2149900456009 /* Level3.m */,
+				3F46EF0A16B216A000456009 /* CongratsLayer3.h */,
+				3F46EF0B16B216A000456009 /* CongratsLayer3.m */,
 			);
 			path = Projectfiles;
 			sourceTree = "<group>";
@@ -349,6 +417,30 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F46EF0D16B2181800456009 /* bee.plist */,
+				3F46EF0E16B2181800456009 /* bee.png */,
+				3F46EF0216B2128600456009 /* redscissors.png */,
+				3F46EED816B1FFA000456009 /* bee1.png */,
+				3F46EED916B1FFA000456009 /* bee2.png */,
+				3F46EEDA16B1FFA000456009 /* carniv1.png */,
+				3F46EEDB16B1FFA000456009 /* carniv2.png */,
+				3F46EEDC16B1FFA000456009 /* carniv3.png */,
+				3F46EEDD16B1FFA000456009 /* carniv4.png */,
+				3F46EEDE16B1FFA000456009 /* carniv5.png */,
+				3F46EEDF16B1FFA000456009 /* carniv6.png */,
+				3F46EEE016B1FFA000456009 /* carniv7.png */,
+				3F46EEE116B1FFA000456009 /* carniv8.png */,
+				3F46EEE216B1FFA000456009 /* carniv9.png */,
+				3F46EEE316B1FFA000456009 /* congrats2.png */,
+				3F46EEE416B1FFA000456009 /* congrats3.png */,
+				3F46EEE516B1FFA000456009 /* level1.png */,
+				3F46EEE616B1FFA000456009 /* level2.png */,
+				3F46EEE716B1FFA000456009 /* level3.png */,
+				3F46EEE816B1FFA100456009 /* pause.png */,
+				3F46EEE916B1FFA100456009 /* redbug1.png */,
+				3F46EEEA16B1FFA100456009 /* redbug2.png */,
+				3F46EEEB16B1FFA100456009 /* resume.png */,
+				3F46EEEC16B1FFA100456009 /* scissors.png */,
 				3FA61EFB16AFB45500A65E8F /* playagain.png */,
 				3FA61EFC16AFB45600A65E8F /* savethefly.png */,
 				3FA61EFD16AFB45600A65E8F /* flyvsplants.png */,
@@ -508,6 +600,30 @@
 				3FA61F0616AFB45700A65E8F /* play.png in Resources */,
 				3FA61F0716AFB45700A65E8F /* congrats.png in Resources */,
 				3FA61F0816AFB45700A65E8F /* gameover.png in Resources */,
+				3F46EEED16B1FFA100456009 /* bee1.png in Resources */,
+				3F46EEEE16B1FFA100456009 /* bee2.png in Resources */,
+				3F46EEEF16B1FFA100456009 /* carniv1.png in Resources */,
+				3F46EEF016B1FFA100456009 /* carniv2.png in Resources */,
+				3F46EEF116B1FFA100456009 /* carniv3.png in Resources */,
+				3F46EEF216B1FFA100456009 /* carniv4.png in Resources */,
+				3F46EEF316B1FFA100456009 /* carniv5.png in Resources */,
+				3F46EEF416B1FFA100456009 /* carniv6.png in Resources */,
+				3F46EEF516B1FFA100456009 /* carniv7.png in Resources */,
+				3F46EEF616B1FFA100456009 /* carniv8.png in Resources */,
+				3F46EEF716B1FFA100456009 /* carniv9.png in Resources */,
+				3F46EEF816B1FFA100456009 /* congrats2.png in Resources */,
+				3F46EEF916B1FFA100456009 /* congrats3.png in Resources */,
+				3F46EEFA16B1FFA100456009 /* level1.png in Resources */,
+				3F46EEFB16B1FFA100456009 /* level2.png in Resources */,
+				3F46EEFC16B1FFA100456009 /* level3.png in Resources */,
+				3F46EEFD16B1FFA100456009 /* pause.png in Resources */,
+				3F46EEFE16B1FFA100456009 /* redbug1.png in Resources */,
+				3F46EEFF16B1FFA100456009 /* redbug2.png in Resources */,
+				3F46EF0016B1FFA100456009 /* resume.png in Resources */,
+				3F46EF0116B1FFA100456009 /* scissors.png in Resources */,
+				3F46EF0316B2128600456009 /* redscissors.png in Resources */,
+				3F46EF0F16B2181800456009 /* bee.plist in Resources */,
+				3F46EF1016B2181800456009 /* bee.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +657,10 @@
 				3FA61F0B16AFB7DB00A65E8F /* StartLayer.m in Sources */,
 				3FA61F0D16AFBC5300A65E8F /* Level1.m in Sources */,
 				3FA61F1016AFBD8200A65E8F /* CongratsLayer.m in Sources */,
+				3F46EED716B09EA400456009 /* Level2.m in Sources */,
+				3F46EF0616B213D600456009 /* CongratsLayer2.m in Sources */,
+				3F46EF0916B2149A00456009 /* Level3.m in Sources */,
+				3F46EF0C16B216A000456009 /* CongratsLayer3.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

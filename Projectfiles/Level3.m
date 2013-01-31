@@ -1,27 +1,22 @@
-/*
- * Kobold2D™ --- http://www.kobold2d.org
- *
- * Copyright (c) 2010-2011 Steffen Itterheim. 
- * Released under MIT License in Germany (LICENSE-Kobold2D.txt).
- */
+//
+//  Level3.m
+//  flyvsplants1
+//
+//  Created by Andrea Rodríguez Arguedas on 24/01/13.
+//
+//
 
-#import "Level1.h"
-#import "Level2.h"
 #import "Level3.h"
-#import "GameOverLayer.h"
-#import "StartLayer.h"
-#import "CongratsLayer.h"
 #import "Plant.h"
+#import "GameOverLayer.h"
+#import "CongratsLayer3.h"
 
-@interface Level1 (PrivateMethods)
-@end
-
-@implementation Level1
+@implementation Level3
 
 CCSprite *fly;
+CCSprite *bee;
 CCSprite *scissors;
 Plant *life;
-Plant *newplant;
 CCTexture2D* transparent;
 CCTexture2D* plantex1;
 CCTexture2D* plantex2;
@@ -33,24 +28,26 @@ CCTexture2D* plantex7;
 CCTexture2D* plantex8;
 CCTexture2D* plantex9;
 CCAction *move;
+CCAction *move2;
 
 NSMutableArray *flies;
+NSMutableArray *bees;
 NSMutableArray *carnivores;
-NSMutableArray *allplants;
 int counte;
 int ranx;
 int rany;
+int beex;
+int beey;
 int i;
 int weapon;
-int nplant;
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
 #define HEIGHT_WINDOW 480
 #define CELL_WIDTH 80
-#define DIFFICULTY 1400
+#define DIFFICULTY 700
 #define INITIAL_TIME 600
-#define MAX_NUM_LIVES 2
+#define MAX_NUM_LIVES 6
 #define WIDTH_GAME WIDTH_WINDOW
 #define HEIGHT_GAME (HEIGHT_WINDOW - Y_OFF_SET)
 #define NUM_ROWS (HEIGHT_GAME / CELL_WIDTH)
@@ -81,16 +78,23 @@ int nplant;
                                                                    target:self
                                                                  selector:@selector(setWeapon1)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, nil];
+        CCMenuItemImage *menuItem5 = [CCMenuItemImage itemWithNormalImage:@"ship.png"
+                                                            selectedImage: @"ship.png"
+                                                                   target:self
+                                                                 selector:@selector(switchBugs)];
+        
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, menuItem5, nil];
         menuItem1.position = ccp(80,50);
         menuItem2.position = ccp(80,20);
-        menuItem3.position = ccp(200,35);
-        menuItem4.position = ccp(280,35);
+        menuItem3.position = ccp(190,35);
+        menuItem4.position = ccp(240,35);
+        menuItem5.position = ccp(290,35);
         myMenu.position = ccp(0,0);
         [menuItem1 setScale:0.3f];
         [menuItem2 setScale:0.3f];
         [menuItem3 setScale:0.1f];
         [menuItem4 setScale:0.1f];
+        [menuItem5 setScale:0.6f];
         [self addChild: myMenu z:1];
         
         transparent = [[CCTextureCache sharedTextureCache] addImage:@"transparent.png"];
@@ -120,10 +124,27 @@ int nplant;
         [fly runAction:move];
         [self addChild:fly z:3];
         
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"bee.plist"];
+        CCSpriteBatchNode *spriteSheet2 = [CCSpriteBatchNode batchNodeWithFile:@"bee.png"];
+        [self addChild:spriteSheet2];
+        
+        bees = [NSMutableArray array];
+        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee1.png"]];
+        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee2.png"]];
+        
+        bee = [CCSprite spriteWithSpriteFrameName:@"bee1.png"];
+        bee.position = ccp( WIDTH_GAME/2 + 40, HEIGHT_GAME/2 + Y_OFF_SET);
+        [bee setScale:0.4f];
+        CCAnimation *moving2 = [CCAnimation animationWithFrames: bees delay:0.1f];
+        move2 = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving2 restoreOriginalFrame:NO]];
+        [bee runAction:move2];
+        [self addChild:bee z:3];
+        
         counte=0;
         ranx=0;
         rany=0;
-        nplant=0;
+        beex=0;
+        beey=0;
         
         for(int i = 0 ; i < MAX_NUMBER_OF_PLANTS ; i++)
         {
@@ -132,92 +153,18 @@ int nplant;
             [life setScale:5];
             [self addChild:life z:1 tag:i];
         }
-        allplants = [[NSMutableArray alloc] init];
         carnivores = [[NSMutableArray alloc] init];
         [self scheduleUpdate];
 	}
 	return self;
 }
 
-
-/*+(id) scene1
-{
-    CCScene *scene1 = [CCScene node];
-	Level1 *layer = [Level1 node];
-	[scene1 addChild: layer];
-	return scene1;
-}
-
-+(id) scene2
-{
-    CCScene *scene2 = [CCScene node];
-	Level2 *layer = [Level2 node];
-	[scene2 addChild: layer];
-	return scene2;
-}
-
-+(id) scene3
-{
-    CCScene *scene3 = [CCScene node];
-	Level3 *layer = [Level3 node];
-	[scene3 addChild: layer];
-	return scene3;
-}
-
-+(id) scene4
-{
-    CCScene *scene4 = [CCScene node];
-    GameOverLayer *layer = [GameOverLayer node];
-	[scene4 addChild: layer];
-	return scene4;
-}
-
-+(id) scene5
-{
-    CCScene *scene5 = [CCScene node];
-	StartLayer *layer = [StartLayer node];
-	[scene5 addChild: layer];
-	return scene5;
-}
-
-+(id) scene6
-{
-    CCScene *scene6 = [CCScene node];
-	CongratsLayer *layer = [CongratsLayer node];
-	[scene6 addChild: layer];
-	return scene6;
-}*/
-
-+(id) scene
-{
-    CCScene *scene = [CCScene node];
-	
-	// 'layer' is an autorelease object.
-	Level1 *layer = [Level1 node];
-    GameOverLayer *layer2 = [GameOverLayer node];
-	StartLayer *layer3 = [StartLayer node];
-    CongratsLayer *layer4 = [CongratsLayer node];
-    Level2 *layer5 = [Level2 node];
-    Level3 *layer6 = [Level3 node];
-    
-	// add layer as a child to scene
-	[scene addChild: layer];
-    [scene addChild: layer2];
-	[scene addChild: layer3];
-    [scene addChild: layer4];
-    [scene addChild: layer5];
-    [scene addChild: layer6];
-    
-	// return the scene
-	return scene;
-}
-
 -(void) draw
 {
-    //big green rectangle
+    //big blue rectangle
     CGPoint c = ccp(0,0 + Y_OFF_SET - 20); //lower-left corner
     CGPoint d = ccp(WIDTH_GAME,HEIGHT_GAME + Y_OFF_SET); //upper-right corner
-    ccColor4F color = ccc4f(0.2, 0.6, 0.2, 1);
+    ccColor4F color = ccc4f(0.3, 0.7, 0.3, 1);
     ccDrawSolidRect(c, d, color);
     
     //lower rectangles
@@ -309,7 +256,47 @@ int nplant;
         rany = -20;
     }
     
-    //check if fly dies
+    //move bee
+    beex = beex + 10 - arc4random()%21;
+    beey = beey + 10 - arc4random()%21;
+    if (ran==6)
+    {
+        beex = beex + 50 - arc4random()%101;
+        beey = beey + 50 - arc4random()%101;
+    }
+    beex = beex - (bee.position.x - 160)/50;
+    beey = beey - (bee.position.y - 280)/50;
+    if ((bee.position.x > 140) && (bee.position.x < 180) && (bee.position.y > 260) && (bee.position.y < 300))
+    {
+        beex = beex + (bee.position.x - 160)/5;
+        beey = beey + (bee.position.y - 280)/5;
+    }
+    if ((bee.position.x > 20) && (bee.position.x < 300) && (bee.position.y > 100) && (bee.position.y < 460))
+    {
+        bee.position = ccp( bee.position.x + beex*delta/3, bee.position.y + beey*delta/3);
+    }
+    if (bee.position.x >= 300)
+    {
+        bee.position = ccp( 299, bee.position.y );
+        beex = -20;
+    }
+    if (bee.position.x <= 20)
+    {
+        bee.position = ccp( 21, bee.position.y );
+        beex = 20;
+    }
+    if (bee.position.y <= 100)
+    {
+        bee.position = ccp( bee.position.x, 101 );
+        beey = 20;
+    }
+    if (bee.position.y >= 460)
+    {
+        fly.position = ccp( bee.position.x, 459 );
+        beey = -20;
+    }
+    
+    //check if fly or bee dies
     int numObjects = [carnivores count];
     for (int chu = 0; chu < numObjects; chu ++)
     {
@@ -321,24 +308,14 @@ int nplant;
             [self performSelector:@selector(gotogameover) withObject:self afterDelay:2.0];
             [self pauseSchedulerAndActions];
         }
+        posx =bee.position.x - item.position.x;
+        posy =bee.position.y - (item.position.y+25);
+        if ((posx < 35) && (posx > -35) && (posy > -20) && (posy < 20))
+        {
+            [self performSelector:@selector(gotogameover) withObject:self afterDelay:2.0];
+            [self pauseSchedulerAndActions];
+        }
     }
-    
-    /*//NEWplants grow & check if player wins
-    int nplantc = [allplants count];
-    for (int chu = 0; chu < nplantc; chu ++)
-    {
-        Plant* item = [allplants objectAtIndex:chu];
-        
-    int rando = arc4random()%DIFFICULTY;
-    if((rando == 0) && nplant < 10)
-    {
-        newplant = [[Plant alloc] initWithPlantImage];
-        [newplant setPosition:ccp(200,200)];
-        [newplant setScale:5];
-        [self addChild:newplant z:1 tag:nplant];
-        nplant++;
-        [allplants addObject:newplant];
-    }*/
     
     //plants grow & check if player wins
     int contt = 0;
@@ -418,7 +395,7 @@ int nplant;
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer3 alloc] init]];
 }
 
 -(void) pauseGame
@@ -446,4 +423,12 @@ int nplant;
     weapon = 1;
 }
 
+-(void) switchBugs
+{
+    CGPoint temp = fly.position;
+    fly.position = bee.position;
+    bee.position = temp;
+}
+
 @end
+

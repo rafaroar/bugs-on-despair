@@ -1,27 +1,21 @@
-/*
- * Kobold2D™ --- http://www.kobold2d.org
- *
- * Copyright (c) 2010-2011 Steffen Itterheim. 
- * Released under MIT License in Germany (LICENSE-Kobold2D.txt).
- */
+//
+//  Level2.m
+//  flyvsplants1
+//
+//  Created by Andrea Rodríguez Arguedas on 23/01/13.
+//
+//
 
-#import "Level1.h"
 #import "Level2.h"
-#import "Level3.h"
-#import "GameOverLayer.h"
-#import "StartLayer.h"
-#import "CongratsLayer.h"
 #import "Plant.h"
+#import "GameOverLayer.h"
+#import "CongratsLayer2.h"
 
-@interface Level1 (PrivateMethods)
-@end
-
-@implementation Level1
+@implementation Level2
 
 CCSprite *fly;
 CCSprite *scissors;
 Plant *life;
-Plant *newplant;
 CCTexture2D* transparent;
 CCTexture2D* plantex1;
 CCTexture2D* plantex2;
@@ -36,21 +30,19 @@ CCAction *move;
 
 NSMutableArray *flies;
 NSMutableArray *carnivores;
-NSMutableArray *allplants;
 int counte;
 int ranx;
 int rany;
 int i;
 int weapon;
-int nplant;
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
 #define HEIGHT_WINDOW 480
 #define CELL_WIDTH 80
-#define DIFFICULTY 1400
+#define DIFFICULTY 900
 #define INITIAL_TIME 600
-#define MAX_NUM_LIVES 2
+#define MAX_NUM_LIVES 4
 #define WIDTH_GAME WIDTH_WINDOW
 #define HEIGHT_GAME (HEIGHT_WINDOW - Y_OFF_SET)
 #define NUM_ROWS (HEIGHT_GAME / CELL_WIDTH)
@@ -123,7 +115,6 @@ int nplant;
         counte=0;
         ranx=0;
         rany=0;
-        nplant=0;
         
         for(int i = 0 ; i < MAX_NUMBER_OF_PLANTS ; i++)
         {
@@ -132,92 +123,18 @@ int nplant;
             [life setScale:5];
             [self addChild:life z:1 tag:i];
         }
-        allplants = [[NSMutableArray alloc] init];
         carnivores = [[NSMutableArray alloc] init];
         [self scheduleUpdate];
 	}
 	return self;
 }
 
-
-/*+(id) scene1
-{
-    CCScene *scene1 = [CCScene node];
-	Level1 *layer = [Level1 node];
-	[scene1 addChild: layer];
-	return scene1;
-}
-
-+(id) scene2
-{
-    CCScene *scene2 = [CCScene node];
-	Level2 *layer = [Level2 node];
-	[scene2 addChild: layer];
-	return scene2;
-}
-
-+(id) scene3
-{
-    CCScene *scene3 = [CCScene node];
-	Level3 *layer = [Level3 node];
-	[scene3 addChild: layer];
-	return scene3;
-}
-
-+(id) scene4
-{
-    CCScene *scene4 = [CCScene node];
-    GameOverLayer *layer = [GameOverLayer node];
-	[scene4 addChild: layer];
-	return scene4;
-}
-
-+(id) scene5
-{
-    CCScene *scene5 = [CCScene node];
-	StartLayer *layer = [StartLayer node];
-	[scene5 addChild: layer];
-	return scene5;
-}
-
-+(id) scene6
-{
-    CCScene *scene6 = [CCScene node];
-	CongratsLayer *layer = [CongratsLayer node];
-	[scene6 addChild: layer];
-	return scene6;
-}*/
-
-+(id) scene
-{
-    CCScene *scene = [CCScene node];
-	
-	// 'layer' is an autorelease object.
-	Level1 *layer = [Level1 node];
-    GameOverLayer *layer2 = [GameOverLayer node];
-	StartLayer *layer3 = [StartLayer node];
-    CongratsLayer *layer4 = [CongratsLayer node];
-    Level2 *layer5 = [Level2 node];
-    Level3 *layer6 = [Level3 node];
-    
-	// add layer as a child to scene
-	[scene addChild: layer];
-    [scene addChild: layer2];
-	[scene addChild: layer3];
-    [scene addChild: layer4];
-    [scene addChild: layer5];
-    [scene addChild: layer6];
-    
-	// return the scene
-	return scene;
-}
-
 -(void) draw
 {
-    //big green rectangle
+    //big blue rectangle
     CGPoint c = ccp(0,0 + Y_OFF_SET - 20); //lower-left corner
     CGPoint d = ccp(WIDTH_GAME,HEIGHT_GAME + Y_OFF_SET); //upper-right corner
-    ccColor4F color = ccc4f(0.2, 0.6, 0.2, 1);
+    ccColor4F color = ccc4f(0.1, 0.4, 0.5, 1);
     ccDrawSolidRect(c, d, color);
     
     //lower rectangles
@@ -323,23 +240,6 @@ int nplant;
         }
     }
     
-    /*//NEWplants grow & check if player wins
-    int nplantc = [allplants count];
-    for (int chu = 0; chu < nplantc; chu ++)
-    {
-        Plant* item = [allplants objectAtIndex:chu];
-        
-    int rando = arc4random()%DIFFICULTY;
-    if((rando == 0) && nplant < 10)
-    {
-        newplant = [[Plant alloc] initWithPlantImage];
-        [newplant setPosition:ccp(200,200)];
-        [newplant setScale:5];
-        [self addChild:newplant z:1 tag:nplant];
-        nplant++;
-        [allplants addObject:newplant];
-    }*/
-    
     //plants grow & check if player wins
     int contt = 0;
     for (i = 0; i < MAX_NUMBER_OF_PLANTS; i++)
@@ -418,7 +318,7 @@ int nplant;
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer2 alloc] init]];
 }
 
 -(void) pauseGame

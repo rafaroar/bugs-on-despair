@@ -1,15 +1,17 @@
 //
-//  StartLayer.m
-//  thelifegame1
+//  CongratsLayer2.m
+//  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 23/01/13.
+//  Created by Andrea Rodríguez Arguedas on 24/01/13.
 //
 //
 
-#import "StartLayer.h"
+#import "CongratsLayer2.h"
 #import "Level1.h"
-CCSprite *flyvsplants;
-CCSprite *savethefly;
+#import "Level2.h"
+#import "Level3.h"
+CCSprite *congrats;
+CCSprite *playagain;
 CCSprite *fly;
 CCAction *move;
 NSMutableArray *flies;
@@ -17,10 +19,10 @@ int counte;
 int ranx;
 int rany;
 
-@interface StartLayer (PrivateMethods)
+@interface CongratsLayer2 (PrivateMethods)
 @end
 
-@implementation StartLayer
+@implementation CongratsLayer2
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
@@ -34,7 +36,7 @@ int rany;
     //big green rectangle
     CGPoint c = ccp(0,0); //lower-left corner
     CGPoint d = ccp(WIDTH_GAME,HEIGHT_WINDOW); //upper-right corner
-    ccColor4F color = ccc4f(0.2, 0.6, 0.2, 1);
+    ccColor4F color = ccc4f(0.1, 0.4, 0.5, 1);
     ccDrawSolidRect(c, d, color);
 }
 
@@ -42,24 +44,39 @@ int rany;
 {
 	if ((self = [super init]))
 	{
-        flyvsplants = [CCSprite spriteWithFile:@"flyvsplants.png"];
-        flyvsplants.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
-        [flyvsplants setScale:0.8f];
-        [self addChild:flyvsplants z:1];
+        congrats = [CCSprite spriteWithFile:@"congrats2.png"];
+        congrats.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
+        [congrats setScale:0.7f];
+        [self addChild:congrats z:1];
         
-        savethefly = [CCSprite spriteWithFile:@"savethefly.png"];
-        savethefly.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET);
-        [savethefly setScale:0.6f];
-        [self addChild:savethefly z:1];
+        playagain = [CCSprite spriteWithFile:@"playagain.png"];
+        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2);
+        [playagain setScale:0.9f];
+        [self addChild:playagain z:1];
         
-        CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"play.png"
-                                                            selectedImage: @"play.png"
+        CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"level1.png"
+                                                            selectedImage: @"level1.png"
                                                                    target:self
-                                                                 selector:@selector(startg:)];
+                                                                 selector:@selector(gotolevel1:)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, nil];
-        myMenu.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - Y_OFF_SET);
-        [myMenu setScale:0.9f];
+        CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"level2.png"
+                                                            selectedImage: @"level2.png"
+                                                                   target:self
+                                                                 selector:@selector(gotolevel2:)];
+        
+        CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
+                                                            selectedImage: @"level3.png"
+                                                                   target:self
+                                                                 selector:@selector(gotolevel3:)];
+        
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
+        menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 80);
+        menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 140);
+        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 200);
+        myMenu.position = ccp(0, 0);
+        [menuItem1 setScale:0.9f];
+        [menuItem2 setScale:0.9f];
+        [menuItem3 setScale:0.9f];
         [self addChild: myMenu z:1];
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
@@ -132,9 +149,19 @@ int rany;
     }
 }
 
--(void) startg: (CCMenuItem  *) menuItem
+-(void) gotolevel1: (CCMenuItem  *) menuItem
 {
     [[CCDirector sharedDirector] replaceScene: [[Level1 alloc] init]];
+}
+
+-(void) gotolevel2: (CCMenuItem  *) menuItem
+{
+    [[CCDirector sharedDirector] replaceScene: [[Level2 alloc] init]];
+}
+
+-(void) gotolevel3: (CCMenuItem  *) menuItem
+{
+    [[CCDirector sharedDirector] replaceScene: [[Level3 alloc] init]];
 }
 
 @end

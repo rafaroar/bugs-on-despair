@@ -6,7 +6,7 @@
  */
 
 #import "GameOverLayer.h"
-#import "Level1.h"
+#import "Level3.h"
 CCSprite *gameover;
 
 @interface GameOverLayer (PrivateMethods)
@@ -54,7 +54,7 @@ CCSprite *gameover;
 
 -(void) startover: (CCMenuItem  *) menuItem
 {
-    [[CCDirector sharedDirector] replaceScene: [[Level1 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Level3 alloc] init]];
 }
 
 @end
