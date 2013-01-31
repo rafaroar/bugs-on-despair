@@ -12,4 +12,5 @@
 @property int grow;
 @property int currentlife;
 -(id) initWithPlantImage;
+-(void) growPlant: (NSMutableArray*)carnivores;
 @end

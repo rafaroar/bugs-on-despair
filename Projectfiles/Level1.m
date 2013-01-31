@@ -12,50 +12,54 @@
 #import "StartLayer.h"
 #import "CongratsLayer.h"
 #import "Plant.h"
+#import "Missile.h"
+#import "MissilePlant.h"
+#import "Bee.h"
 
 @interface Level1 (PrivateMethods)
 @end
 
 @implementation Level1
 
-CCSprite *fly;
+Bee *fly;
 CCSprite *scissors;
-Plant *life;
+Missile *mm;
 Plant *newplant;
-CCTexture2D* transparent;
-CCTexture2D* plantex1;
-CCTexture2D* plantex2;
-CCTexture2D* plantex3;
-CCTexture2D* plantex4;
-CCTexture2D* plantex5;
-CCTexture2D* plantex6;
-CCTexture2D* plantex7;
-CCTexture2D* plantex8;
-CCTexture2D* plantex9;
+MissilePlant *newmiss;
+CCTexture2D* redclosedscissors;
+CCTexture2D* blueclosedscissors;
 CCAction *move;
+CCAnimation *moving;
+CCProgressTimer* powerBar;
 
 NSMutableArray *flies;
 NSMutableArray *carnivores;
+NSMutableArray *throwers;
+NSMutableArray *carnplants;
+NSMutableArray *missplants;
 NSMutableArray *allplants;
+NSMutableArray *missiles;
+
 int counte;
-int ranx;
-int rany;
-int i;
+float ranx;
+float rany;
 int weapon;
 int nplant;
+int nmiss;
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
 #define HEIGHT_WINDOW 480
 #define CELL_WIDTH 80
-#define DIFFICULTY 1400
+#define DIFFICULTY 20
 #define INITIAL_TIME 600
-#define MAX_NUM_LIVES 2
 #define WIDTH_GAME WIDTH_WINDOW
 #define HEIGHT_GAME (HEIGHT_WINDOW - Y_OFF_SET)
 #define NUM_ROWS (HEIGHT_GAME / CELL_WIDTH)
 #define NUM_COLUMNS (WIDTH_GAME / CELL_WIDTH)
-#define MAX_NUMBER_OF_PLANTS (NUM_ROWS * NUM_COLUMNS)
+#define PLANTS 20
+#define MISSES 5
+#define TOTAL (PLANTS + MISSES)
 
 -(id) init
 {
@@ -93,47 +97,34 @@ int nplant;
         [menuItem4 setScale:0.1f];
         [self addChild: myMenu z:1];
         
-        transparent = [[CCTextureCache sharedTextureCache] addImage:@"transparent.png"];
-        plantex1 = [[CCTextureCache sharedTextureCache] addImage:@"carniv1.png"];
-        plantex2 = [[CCTextureCache sharedTextureCache] addImage:@"carniv2.png"];
-        plantex3 = [[CCTextureCache sharedTextureCache] addImage:@"carniv3.png"];
-        plantex4 = [[CCTextureCache sharedTextureCache] addImage:@"carniv4.png"];
-        plantex5 = [[CCTextureCache sharedTextureCache] addImage:@"carniv5.png"];
-        plantex6 = [[CCTextureCache sharedTextureCache] addImage:@"carniv6.png"];
-        plantex7 = [[CCTextureCache sharedTextureCache] addImage:@"carniv7.png"];
-        plantex8 = [[CCTextureCache sharedTextureCache] addImage:@"carniv8.png"];
-        plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"carniv9.png"];
+        redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors.png"];
+        blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors.png"];
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
-        CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"fly.png"];
-        [self addChild:spriteSheet];
-        
-        flies = [NSMutableArray array];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly1.png"]];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly2.png"]];
-        
-        fly = [CCSprite spriteWithSpriteFrameName:@"fly1.png"];
-        fly.position = ccp( WIDTH_GAME/2, HEIGHT_GAME/2 + Y_OFF_SET);
-        [fly setScale:0.4f];
-        CCAnimation *moving = [CCAnimation animationWithFrames: flies delay:0.1f];
-        move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];
-        [fly runAction:move];
+        fly = [[Bee alloc] initWithBeeAnimation];
         [self addChild:fly z:3];
         
         counte=0;
         ranx=0;
         rany=0;
+        weapon=0;
         nplant=0;
+        nmiss=0;
         
-        for(int i = 0 ; i < MAX_NUMBER_OF_PLANTS ; i++)
-        {
-            life = [[Plant alloc] initWithPlantImage];
-            [life setPosition:ccp(0,0)];
-            [life setScale:5];
-            [self addChild:life z:1 tag:i];
-        }
         allplants = [[NSMutableArray alloc] init];
+        carnplants = [[NSMutableArray alloc] init];
+        missplants = [[NSMutableArray alloc] init];
         carnivores = [[NSMutableArray alloc] init];
+        throwers = [[NSMutableArray alloc] init];
+        missiles = [[NSMutableArray alloc] init];
+        
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"ship.png"]];
+        powerBar.type = kCCProgressTimerTypeBar;
+        powerBar.midpoint = ccp(0,0); // starts from left
+        powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
+        powerBar.percentage = 0; // (0 - 100)
+        powerBar.position = ccp(200,200);
+        [self addChild:powerBar z:3];
+        
         [self scheduleUpdate];
 	}
 	return self;
@@ -234,7 +225,18 @@ int nplant;
 
 -(void) update: (ccTime) delta
 {
-    //throw grenade and kill plant
+    counte++;
+    
+    //CHECK IF PLAYER WINS
+    if(powerBar.percentage == 100)
+    {
+        [self performSelector:@selector(gotocongrats) withObject:self afterDelay:2.0];
+        [self pauseSchedulerAndActions];
+    }
+
+    //KILL PLANTS
+    int nplantcc = [carnplants count];
+    int nmisscc = [missplants count];
     if ([[KKInput sharedInput] anyTouchBeganThisFrame])
     {
         KKInput* input = [KKInput sharedInput];
@@ -252,66 +254,41 @@ int nplant;
             scissors.position = pos;
             [scissors setScale:0.15f];
             [self addChild:scissors z:2];
+            [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.05];
             [self performSelector:@selector(removeScissors) withObject:self afterDelay:0.1];
         }
-        for (i = 0; i < MAX_NUMBER_OF_PLANTS; i++)
+        for (int chu = 0; chu < nplantcc; chu ++)
         {
-            Plant * plantis = [self getChildByTag:i];
+            Plant* plantis = [carnplants objectAtIndex:chu];
             if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
             {
-                plantis.position = ccp(0,0);
-                [plantis setTexture: transparent];
-                plantis.grow=0;
+                [self removeChild:plantis cleanup:YES];
                 [carnivores removeObject:plantis];
+                [carnplants removeObject:plantis];
+                [allplants removeObject:plantis];
+                nplantcc--;
+                powerBar.percentage += 100.0f/TOTAL;
+            }
+        }
+        for (int chu = 0; chu < nmisscc; chu ++)
+        {
+            MissilePlant* plantis = [missplants objectAtIndex:chu];
+            if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+            {
+                [self removeChild:plantis cleanup:YES];
+                [throwers removeObject:plantis];
+                [missplants removeObject:plantis];
+                [allplants removeObject:plantis];
+                nmisscc--;
+                powerBar.percentage += 100.0f/TOTAL;
             }
         }
     }
     
-    //move fly
-    counte++;
-    int ran = counte % 10;
-    ranx = ranx + 10 - arc4random()%21;
-    rany = rany + 10 - arc4random()%21;
-    if (ran==1)
-    {
-        ranx = ranx + 50 - arc4random()%101;
-        rany = rany + 50 - arc4random()%101;
-    }
-    ranx = ranx - (fly.position.x - 160)/50;
-    rany = rany - (fly.position.y - 280)/50;
-    if ((fly.position.x > 140) && (fly.position.x < 180) && (fly.position.y > 260) && (fly.position.y < 300))
-    {
-        ranx = ranx + (fly.position.x - 160)/5;
-        rany = rany + (fly.position.y - 280)/5;
-    }
-    if ((fly.position.x > 20) && (fly.position.x < 300) && (fly.position.y > 100) && (fly.position.y < 460))
-    {
-        fly.position = ccp( fly.position.x + ranx*delta, fly.position.y + rany*delta);
-    }
-    if (fly.position.x >= 300)
-    {
-        fly.position = ccp( 299, fly.position.y );
-        ranx = -20;
-    }
-    if (fly.position.x <= 20)
-    {
-        fly.position = ccp( 21, fly.position.y );
-        ranx = 20;
-    }
-    if (fly.position.y <= 100)
-    {
-        fly.position = ccp( fly.position.x, 101 );
-        rany = 20;
-    }
-    if (fly.position.y >= 460)
-    {
-        fly.position = ccp( fly.position.x, 459 );
-        rany = -20;
-    }
-    
-    //check if fly dies
-    int numObjects = [carnivores count];
-    for (int chu = 0; chu < numObjects; chu ++)
+    //CHECK IF FLY DIES DEVOURED
+    int num = [carnivores count];
+    NSLog(@"Int k is %i", num);
+    for (int chu = 0; chu < num; chu ++)
     {
         Plant* item = [carnivores objectAtIndex:chu];
         int posx =fly.position.x - item.position.x;
@@ -323,91 +300,147 @@ int nplant;
         }
     }
     
-    /*//NEWplants grow & check if player wins
-    int nplantc = [allplants count];
+    //CHECK IF FLY DIES BY MISSILE AND MOVE MISSILE
+    num = [missiles count];
+    for (int chu = 0; chu < num; chu ++)
+    {
+        Missile* item = [missiles objectAtIndex:chu];
+        int posx =fly.position.x - item.position.x;
+        int posy =fly.position.y - item.position.y;
+        if ((posx < 30) && (posx > -30) && (posy > -20) && (posy < 20))
+        {
+            //[self performSelector:@selector(gotogameover) withObject:self afterDelay:2.0];
+            //[self pauseSchedulerAndActions];
+        }
+        item.position = ccp( item.position.x + item.direcx, item.position.y + item.direcy);
+        if ((item.position.y > 480)||(item.position.y < 80)||(item.position.x > 320)||(item.position.x < 0))
+        {
+            [self removeChild:item cleanup:YES];
+        }
+    }
+    
+    //MOVE FLY
+    ranx = [fly moveBeeX: counte high: ranx];
+    rany = [fly moveBeeY: counte high: rany];
+    
+    //PLANTS GROW
+    int nplantc = [carnplants count];
     for (int chu = 0; chu < nplantc; chu ++)
     {
-        Plant* item = [allplants objectAtIndex:chu];
-        
-    int rando = arc4random()%DIFFICULTY;
-    if((rando == 0) && nplant < 10)
-    {
-        newplant = [[Plant alloc] initWithPlantImage];
-        [newplant setPosition:ccp(200,200)];
-        [newplant setScale:5];
-        [self addChild:newplant z:1 tag:nplant];
-        nplant++;
-        [allplants addObject:newplant];
-    }*/
+        int conn = counte%6;
+        if(conn == 0)
+        {
+            Plant* plantis = [carnplants objectAtIndex:chu];
+            [plantis growPlant: carnivores];
+        }
+    }
     
-    //plants grow & check if player wins
-    int contt = 0;
-    for (i = 0; i < MAX_NUMBER_OF_PLANTS; i++)
+    //MISSILEPLANTS GROW
+    int nmissc = [missplants count];
+    for (int chu = 0; chu < nmissc; chu ++)
     {
-        Plant * plantis = [self getChildByTag:i];
-        if (plantis.grow > 0)
+        int conn = counte%6;
+        if(conn == 1)
         {
-            contt++;
+            MissilePlant* plantis = [missplants objectAtIndex:chu];
+            [plantis growMiss: throwers];
         }
-        int rand = arc4random()%DIFFICULTY;
-        if((rand == 0) && (plantis.grow==0) && plantis.currentlife < MAX_NUM_LIVES)
+    }
+
+    
+    //MISSILEPLANT THROWS MISSILE
+    num = [throwers count];
+    for (int chu = 0; chu < num; chu ++)
+    {
+        int rrr = arc4random()%400;
+        if(rrr == 0)
         {
-            int posx=arc4random()%20+30+(i%4)*80;
-            int posy=arc4random()%20+110+(i/4)*80;
-            plantis.position = ccp(posx, posy);
-            [plantis setTexture: plantex1];
-            plantis.grow++;
-            plantis.currentlife++;
+            MissilePlant* item = [throwers objectAtIndex:chu];
+                if (item.thrower==0)
+                {
+                    mm = [[Missile alloc] initWithMissileImage];
+                    [mm setPosition:item.position];
+                    [mm setScale:0.4f];
+                    [self addChild:mm z:2];
+                    [missiles addObject:mm];
+                    int posx =fly.position.x - item.position.x;
+                    int posy =fly.position.y - item.position.y;
+                    mm.direcx = posx/100.0f;
+                    mm.direcy = posy/100.0f;
+                    //float amp = sqrtf(mm.direcx * mm.direcx + mm.direcy * mm.direcy);
+                    //float kx = mm.direcx;
+                    //mm.direcx = kx / amp;
+                    //float ky = mm.direcy;
+                    //mm.direcy = ky / amp;
+                    item.thrower++;
+                }
         }
-        else if(rand < 25)
+    }
+    
+    
+    //NEW PLANT APPEARS
+    int ntotal = nplantc + nmissc;
+    int diffty = 5 + DIFFICULTY * ntotal;
+    int rando = arc4random()%diffty;
+    if((rando == 0) && (nplant < PLANTS))
+    {
+        int correct = 0;
+        int px = 40 + arc4random()%240;
+        int py = 120 + arc4random()%320;
+        CGPoint randpos = ccp(px, py);
+        for (int chu = 0; chu < ntotal; chu ++)
         {
-            if (plantis.grow==1)
+            CCSprite* item = [allplants objectAtIndex:chu];
+            if (((randpos.x-item.position.x>70) || (randpos.x-item.position.x<-70)) || ((randpos.y-item.position.y>70) || (randpos.y-item.position.y<-70)))
             {
-                [plantis setTexture: plantex2];
-                plantis.grow++;
+                correct++;
             }
-            else if (plantis.grow==2)
+        }
+        if (((randpos.x-fly.position.x>100) || (randpos.x-fly.position.x<-100)) || ((randpos.y-fly.position.y>100) || (randpos.y-fly.position.y<-100)))
+        {
+            if (correct==ntotal)
             {
-                [plantis setTexture: plantex3];
-                plantis.grow++;
-            }
-            else if (plantis.grow==3)
-            {
-                [plantis setTexture: plantex4];
-                plantis.grow++;
-            }
-            else if (plantis.grow==4)
-            {
-                [plantis setTexture: plantex5];
-                plantis.grow++;
-            }
-            else if (plantis.grow==5)
-            {
-                [plantis setTexture: plantex6];
-                plantis.grow++;
-            }
-            else if (plantis.grow==6)
-            {
-                [plantis setTexture: plantex7];
-                plantis.grow++;
-            }
-            else if (plantis.grow==7)
-            {
-                [plantis setTexture: plantex8];
-                plantis.grow++;
-            }
-            else if (plantis.grow==8)
-            {
-                [plantis setTexture: plantex9];
-                plantis.grow++;
-                [carnivores addObject:plantis];
+                newplant = [[Plant alloc] initWithPlantImage];
+                [newplant setPosition:randpos];
+                [newplant setScale:0.125f];
+                [self addChild:newplant z:1 tag:nplant];
+                [carnplants addObject:newplant];
+                [allplants addObject:newplant];
+                nplant++;
             }
         }
     }
-    if(contt == 0 && counte > INITIAL_TIME)
+    
+    //NEW MISSILEPLANT APPEARS
+    diffty = 30 + DIFFICULTY * ntotal;
+    rando = arc4random()%diffty;
+    if((rando == 0) && (nmiss < MISSES))
     {
-        [self performSelector:@selector(gotocongrats) withObject:self afterDelay:2.0];
-        [self pauseSchedulerAndActions];
+        int correct = 0;
+        int px = 40 + arc4random()%240;
+        int py = 120 + arc4random()%320;
+        CGPoint randpos = ccp(px, py);
+        for (int chu = 0; chu < ntotal; chu ++)
+        {
+           CCSprite* item = [allplants objectAtIndex:chu];
+            if (((randpos.x-item.position.x>70) || (randpos.x-item.position.x<-70)) || ((randpos.y-item.position.y>70) || (randpos.y-item.position.y<-70)))
+            {
+                correct++;
+            }
+        }
+        if (((randpos.x-fly.position.x>100) || (randpos.x-fly.position.x<-100)) || ((randpos.y-fly.position.y>100) || (randpos.y-fly.position.y<-100)))
+        {
+            if (correct==ntotal)
+            {
+                newmiss = [[MissilePlant alloc] initWithPlantImage];
+                [newmiss setPosition:randpos];
+                [newmiss setScale:0.125f];
+                [self addChild:newmiss z:1 tag:nmiss];
+                [missplants addObject:newmiss];
+                [allplants addObject:newmiss];
+                nmiss++;
+            }
+        }
     }
 }
 
@@ -429,6 +462,18 @@ int nplant;
 -(void) resumeGame
 {
     [self resumeSchedulerAndActions];
+}
+
+-(void) closeScissors
+{
+    if (weapon==0)
+    {
+        [scissors setTexture: blueclosedscissors];
+    }
+    else if (weapon==1)
+    {
+        [scissors setTexture: redclosedscissors];
+    }
 }
 
 -(void) removeScissors

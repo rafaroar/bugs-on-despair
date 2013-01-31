@@ -1,20 +1,20 @@
 //
-//  Plant.m
-//  thelifegame1
+//  MissilePlant.m
+//  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 22/01/13.
+//  Created by Andrea Rodríguez Arguedas on 31/01/13.
 //
 //
 
-#import "Plant.h"
+#import "MissilePlant.h"
 
-@interface Plant (PrivateMethods)
+@interface MissilePlant (PrivateMethods)
 
 @end
 
-@implementation Plant
+@implementation MissilePlant
 @synthesize grow;
-@synthesize currentlife;
+@synthesize thrower;
 
 CCTexture2D* plantex1;
 CCTexture2D* plantex2;
@@ -36,17 +36,17 @@ CCTexture2D* plantex9;
     plantex6 = [[CCTextureCache sharedTextureCache] addImage:@"carniv6.png"];
     plantex7 = [[CCTextureCache sharedTextureCache] addImage:@"carniv7.png"];
     plantex8 = [[CCTextureCache sharedTextureCache] addImage:@"carniv8.png"];
-    plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"carniv9.png"];
+    plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"redbug1.png"];
     
     if ((self = [super initWithTexture:plantex1]))
     {
         grow = 0;
-        currentlife = 0;
+        thrower = 0;
     }
     return self;
 }
 
--(void) growPlant: (NSMutableArray*)carnivores
+-(void) growMiss: (NSMutableArray*)throwers
 {
     if (self.grow==0)
     {
@@ -87,11 +87,8 @@ CCTexture2D* plantex9;
     {
         [self setTexture: plantex9];
         self.grow++;
-        [carnivores addObject:self];
+        [throwers addObject:self];
     }
 }
 
 @end
-
-
-
