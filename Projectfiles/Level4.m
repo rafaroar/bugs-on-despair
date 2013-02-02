@@ -73,7 +73,7 @@
         
         redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
         blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
-        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
+        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explo.png"];
         
         fly = [[Redbug alloc] initWithRedbugAnimation];
         [self addChild:fly z:3];
@@ -105,13 +105,13 @@
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
         powerBar.percentage = 0; // (0 - 100)
-        [powerBar setScale:0.1f];
+        [powerBar setScale:0.2f];
         powerBar.position = ccp(160,70);
         [self addChild:powerBar z:2];
         
         connt = [CCSprite spriteWithFile:@"powerbacontainer.png"];
         [connt setPosition:ccp(160,70)];
-        [connt setScale:0.1f];
+        [connt setScale:0.2f];
         [self addChild:connt z:1];
         
         selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
@@ -341,7 +341,7 @@
             int rrr = arc4random()%400;
             if(rrr == 0)
             {
-                if (item.thrower==0)
+                if ((item.thrower==0) && (numm > 0))
                 {
                     mm = [[Missile alloc] initWithMissileAnimation];
                     [mm setPosition:item.position];

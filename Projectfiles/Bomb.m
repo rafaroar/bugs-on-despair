@@ -17,7 +17,7 @@
 -(id) initWithBombImage
 {
     bomtex = [[CCTextureCache sharedTextureCache] addImage:@"bomb.png"];
-    explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
+    explosion = [[CCTextureCache sharedTextureCache] addImage:@"explo.png"];
     
     (self = [super initWithTexture:bomtex]);
     [self setScale:0.1f];

@@ -83,13 +83,13 @@
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
         powerBar.percentage = 0; // (0 - 100)
-        [powerBar setScale:0.1f];
+        [powerBar setScale:0.2f];
         powerBar.position = ccp(160,70);
         [self addChild:powerBar z:2];
         
         connt = [CCSprite spriteWithFile:@"powerbacontainer.png"];
         [connt setPosition:ccp(160,70)];
-        [connt setScale:0.1f];
+        [connt setScale:0.2f];
         [self addChild:connt z:1];
         
         selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
