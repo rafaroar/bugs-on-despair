@@ -7,7 +7,6 @@
 
 #import "GameOverLayer.h"
 #import "Level1.h"
-CCSprite *gameover;
 
 @interface GameOverLayer (PrivateMethods)
 @end

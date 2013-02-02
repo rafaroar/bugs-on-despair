@@ -16,27 +16,20 @@
 @synthesize grow;
 @synthesize thrower;
 
-CCTexture2D* plantex1;
-CCTexture2D* plantex2;
-CCTexture2D* plantex3;
-CCTexture2D* plantex4;
-CCTexture2D* plantex5;
-CCTexture2D* plantex6;
-CCTexture2D* plantex7;
-CCTexture2D* plantex8;
-CCTexture2D* plantex9;
-
 -(id) initWithPlantImage
 {
-    plantex1 = [[CCTextureCache sharedTextureCache] addImage:@"carniv1.png"];
-    plantex2 = [[CCTextureCache sharedTextureCache] addImage:@"carniv2.png"];
-    plantex3 = [[CCTextureCache sharedTextureCache] addImage:@"carniv3.png"];
-    plantex4 = [[CCTextureCache sharedTextureCache] addImage:@"carniv4.png"];
-    plantex5 = [[CCTextureCache sharedTextureCache] addImage:@"carniv5.png"];
-    plantex6 = [[CCTextureCache sharedTextureCache] addImage:@"carniv6.png"];
-    plantex7 = [[CCTextureCache sharedTextureCache] addImage:@"carniv7.png"];
-    plantex8 = [[CCTextureCache sharedTextureCache] addImage:@"carniv8.png"];
-    plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"redbug1.png"];
+    plantex1 = [[CCTextureCache sharedTextureCache] addImage:@"thrower1.png"];
+    plantex2 = [[CCTextureCache sharedTextureCache] addImage:@"thrower2.png"];
+    plantex3 = [[CCTextureCache sharedTextureCache] addImage:@"thrower3.png"];
+    plantex4 = [[CCTextureCache sharedTextureCache] addImage:@"thrower4.png"];
+    plantex5 = [[CCTextureCache sharedTextureCache] addImage:@"thrower5.png"];
+    plantex6 = [[CCTextureCache sharedTextureCache] addImage:@"thrower6.png"];
+    plantex7 = [[CCTextureCache sharedTextureCache] addImage:@"thrower7.png"];
+    plantex8 = [[CCTextureCache sharedTextureCache] addImage:@"thrower8.png"];
+    plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"thrower9.png"];
+    plantex10 = [[CCTextureCache sharedTextureCache] addImage:@"thrower10.png"];
+    shooting1 = [[CCTextureCache sharedTextureCache] addImage:@"throwright1.png"];
+    shooting2 = [[CCTextureCache sharedTextureCache] addImage:@"throwright2.png"];
     
     if ((self = [super initWithTexture:plantex1]))
     {
@@ -82,12 +75,18 @@ CCTexture2D* plantex9;
     {
         [self setTexture: plantex8];
         self.grow++;
-    }
-    else if (self.grow==7)
-    {
-        [self setTexture: plantex9];
-        self.grow++;
         [throwers addObject:self];
+    }
+    else
+    {
+        if (self.thrower==1)
+        {
+            [self setTexture: plantex10];
+        }
+        else if (self.thrower==0)
+        {
+            [self setTexture: plantex9];
+        }
     }
 }
 

@@ -8,6 +8,9 @@
 #import "kobold2d.h"
 
 @interface GameOverLayer : CCLayer
+{
+    CCSprite *gameover;
+}
 -(void) draw;
 -(id) init;
 -(void) startover: (CCMenuItem  *) menuItem;

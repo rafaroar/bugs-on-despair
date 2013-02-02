@@ -13,10 +13,6 @@
 
 @implementation Fly
 
-CCAction *move;
-CCAnimation *moving;
-NSMutableArray *flies;
-
 -(id) initWithFlyAnimation
 {
     [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
@@ -29,7 +25,7 @@ NSMutableArray *flies;
     
     self = [super initWithFile:@"fly1.png"];
     [self setDisplayFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly1.png"]];
-    self.position = ccp( 200,300);
+    self.position = ccp( 160,280);
     [self setScale:0.4f];
     moving = [CCAnimation animationWithFrames: flies delay:0.1f];
     move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];
@@ -52,7 +48,7 @@ NSMutableArray *flies;
     }
     if ((self.position.x > 20) && (self.position.x < 300))
     {
-        self.position = ccp( self.position.x + ranx*0.015, self.position.y);
+        self.position = ccp( self.position.x + ranx*0.01, self.position.y);
     }
     if (self.position.x >= 300)
     {
@@ -82,7 +78,7 @@ NSMutableArray *flies;
     }
     if ((self.position.y > 100) && (self.position.y < 460))
     {
-        self.position = ccp( self.position.x, self.position.y + rany*0.015);
+        self.position = ccp( self.position.x, self.position.y + rany*0.01);
     }
     if (self.position.y <= 100)
     {

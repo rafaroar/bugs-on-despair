@@ -6,46 +6,16 @@
  */
 
 #import "Level1.h"
-#import "Level2.h"
-#import "Level3.h"
 #import "GameOverLayer.h"
 #import "StartLayer.h"
 #import "CongratsLayer.h"
 #import "Plant.h"
-#import "Missile.h"
-#import "MissilePlant.h"
 #import "Bee.h"
 
 @interface Level1 (PrivateMethods)
 @end
 
 @implementation Level1
-
-Bee *fly;
-CCSprite *scissors;
-Missile *mm;
-Plant *newplant;
-MissilePlant *newmiss;
-CCTexture2D* redclosedscissors;
-CCTexture2D* blueclosedscissors;
-CCAction *move;
-CCAnimation *moving;
-CCProgressTimer* powerBar;
-
-NSMutableArray *flies;
-NSMutableArray *carnivores;
-NSMutableArray *throwers;
-NSMutableArray *carnplants;
-NSMutableArray *missplants;
-NSMutableArray *allplants;
-NSMutableArray *missiles;
-
-int counte;
-float ranx;
-float rany;
-int weapon;
-int nplant;
-int nmiss;
 
 #define Y_OFF_SET 80
 #define WIDTH_WINDOW 320
@@ -57,8 +27,8 @@ int nmiss;
 #define HEIGHT_GAME (HEIGHT_WINDOW - Y_OFF_SET)
 #define NUM_ROWS (HEIGHT_GAME / CELL_WIDTH)
 #define NUM_COLUMNS (WIDTH_GAME / CELL_WIDTH)
-#define PLANTS 20
-#define MISSES 5
+#define PLANTS 15
+#define MISSES 0
 #define TOTAL (PLANTS + MISSES)
 
 -(id) init
@@ -66,39 +36,32 @@ int nmiss;
 	if ((self = [super init]))
 	{
         CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"pause.png"
-                                                            selectedImage: @"pause.png"
+                                                            selectedImage: @"pause_sel.png"
                                                                    target:self
                                                                  selector:@selector(pauseGame)];
         
-        CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"resume.png"
-                                                            selectedImage: @"resume.png"
-                                                                   target:self
-                                                                 selector:@selector(resumeGame)];
-        
-        CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"scissors.png"
-                                                            selectedImage: @"scissors.png"
+        CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"scissors.png"
+                                                            selectedImage: @"scissors_sel.png"
                                                                    target:self
                                                                  selector:@selector(setWeapon0)];
         
-        CCMenuItemImage *menuItem4 = [CCMenuItemImage itemWithNormalImage:@"redscissors.png"
-                                                            selectedImage: @"redscissors.png"
+        CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"redscissors.png"
+                                                            selectedImage: @"redscissors_sel.png"
                                                                    target:self
                                                                  selector:@selector(setWeapon1)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, nil];
-        menuItem1.position = ccp(80,50);
-        menuItem2.position = ccp(80,20);
-        menuItem3.position = ccp(200,35);
-        menuItem4.position = ccp(280,35);
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
+        menuItem1.position = ccp(240,30);
+        menuItem2.position = ccp(50,35);
+        menuItem3.position = ccp(110,35);
         myMenu.position = ccp(0,0);
-        [menuItem1 setScale:0.3f];
-        [menuItem2 setScale:0.3f];
+        [menuItem1 setScale:0.4f];
+        [menuItem2 setScale:0.1f];
         [menuItem3 setScale:0.1f];
-        [menuItem4 setScale:0.1f];
         [self addChild: myMenu z:1];
         
-        redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors.png"];
-        blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors.png"];
+        redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
+        blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
         
         fly = [[Bee alloc] initWithBeeAnimation];
         [self addChild:fly z:3];
@@ -108,99 +71,42 @@ int nmiss;
         rany=0;
         weapon=0;
         nplant=0;
-        nmiss=0;
         
         allplants = [[NSMutableArray alloc] init];
         carnplants = [[NSMutableArray alloc] init];
-        missplants = [[NSMutableArray alloc] init];
+        catchingplants = [[NSMutableArray alloc] init];
         carnivores = [[NSMutableArray alloc] init];
-        throwers = [[NSMutableArray alloc] init];
-        missiles = [[NSMutableArray alloc] init];
         
-        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"ship.png"]];
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
         powerBar.type = kCCProgressTimerTypeBar;
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
         powerBar.percentage = 0; // (0 - 100)
-        powerBar.position = ccp(200,200);
-        [self addChild:powerBar z:3];
+        [powerBar setScale:0.1f];
+        powerBar.position = ccp(160,70);
+        [self addChild:powerBar z:2];
+        
+        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
+        [connt setPosition:ccp(160,70)];
+        [connt setScale:0.1f];
+        [self addChild:connt z:1];
+        
+        selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
+        [selscissors setPosition:ccp(50,35)];
+        [selscissors setScale:0.1f];
+        redselscissors = [CCSprite spriteWithFile:@"redscissors_sel.png"];
+        [redselscissors setPosition:ccp(110,35)];
+        [redselscissors setScale:0.1f];
+        [self addChild:selscissors z:1];
+        
+        announcement = [CCSprite spriteWithFile:@"an_level1.png"];
+        [announcement setPosition:ccp(160,280)];
+        [announcement setScale:0.6f];
+        [self addChild:announcement z:5];
         
         [self scheduleUpdate];
 	}
 	return self;
-}
-
-
-/*+(id) scene1
-{
-    CCScene *scene1 = [CCScene node];
-	Level1 *layer = [Level1 node];
-	[scene1 addChild: layer];
-	return scene1;
-}
-
-+(id) scene2
-{
-    CCScene *scene2 = [CCScene node];
-	Level2 *layer = [Level2 node];
-	[scene2 addChild: layer];
-	return scene2;
-}
-
-+(id) scene3
-{
-    CCScene *scene3 = [CCScene node];
-	Level3 *layer = [Level3 node];
-	[scene3 addChild: layer];
-	return scene3;
-}
-
-+(id) scene4
-{
-    CCScene *scene4 = [CCScene node];
-    GameOverLayer *layer = [GameOverLayer node];
-	[scene4 addChild: layer];
-	return scene4;
-}
-
-+(id) scene5
-{
-    CCScene *scene5 = [CCScene node];
-	StartLayer *layer = [StartLayer node];
-	[scene5 addChild: layer];
-	return scene5;
-}
-
-+(id) scene6
-{
-    CCScene *scene6 = [CCScene node];
-	CongratsLayer *layer = [CongratsLayer node];
-	[scene6 addChild: layer];
-	return scene6;
-}*/
-
-+(id) scene
-{
-    CCScene *scene = [CCScene node];
-	
-	// 'layer' is an autorelease object.
-	Level1 *layer = [Level1 node];
-    GameOverLayer *layer2 = [GameOverLayer node];
-	StartLayer *layer3 = [StartLayer node];
-    CongratsLayer *layer4 = [CongratsLayer node];
-    Level2 *layer5 = [Level2 node];
-    Level3 *layer6 = [Level3 node];
-    
-	// add layer as a child to scene
-	[scene addChild: layer];
-    [scene addChild: layer2];
-	[scene addChild: layer3];
-    [scene addChild: layer4];
-    [scene addChild: layer5];
-    [scene addChild: layer6];
-    
-	// return the scene
-	return scene;
 }
 
 -(void) draw
@@ -212,116 +118,99 @@ int nmiss;
     ccDrawSolidRect(c, d, color);
     
     //lower rectangles
-    CGPoint f = ccp(WIDTH_WINDOW / 2,0);
+    CGPoint f = ccp(0,0);
     CGPoint g = ccp(WIDTH_WINDOW,70);
-    ccColor4F color2 = ccc4f(0.5, 0, 0.5, 1);
+    ccColor4F color2 = ccc4f(0.5, 0.1, 0.5, 1);
     ccDrawSolidRect(f, g, color2);
-    
-    CGPoint h = ccp(0,0);
-    CGPoint i = ccp(WIDTH_WINDOW / 2,70);
-    ccColor4F color3 = ccc4f(0.1, 0, 0.9, 1);
-    ccDrawSolidRect(i, h, color3);
 }
 
 -(void) update: (ccTime) delta
 {
     counte++;
+    if (counte == 100)
+    {
+        [self removeChild:announcement cleanup:YES];
+    }
     
+    else if (counte > 100)
+    {
+        
     //CHECK IF PLAYER WINS
-    if(powerBar.percentage == 100)
+    if(powerBar.percentage > 99.5)
     {
         [self performSelector:@selector(gotocongrats) withObject:self afterDelay:2.0];
+        announcement = [CCSprite spriteWithFile:@"an_welldone.png"];
+        [announcement setPosition:ccp(160,280)];
+        [announcement setScale:0.6f];
+        [self addChild:announcement z:5];
         [self pauseSchedulerAndActions];
     }
 
     //KILL PLANTS
-    int nplantcc = [carnplants count];
-    int nmisscc = [missplants count];
+    int nallcc = [allplants count];
     if ([[KKInput sharedInput] anyTouchBeganThisFrame])
     {
         KKInput* input = [KKInput sharedInput];
         CGPoint pos = [input locationOfAnyTouchInPhase:KKTouchPhaseAny];
         if (pos.y > Y_OFF_SET - 10)
         {
-            if (weapon == 0)
-            {
-                scissors = [CCSprite spriteWithFile:@"scissors.png"];
-            }
-            else if (weapon == 1)
-            {
-                scissors = [CCSprite spriteWithFile:@"redscissors.png"];
-            }
-            scissors.position = pos;
-            [scissors setScale:0.15f];
-            [self addChild:scissors z:2];
-            [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.05];
-            [self performSelector:@selector(removeScissors) withObject:self afterDelay:0.1];
-        }
-        for (int chu = 0; chu < nplantcc; chu ++)
-        {
-            Plant* plantis = [carnplants objectAtIndex:chu];
-            if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
-            {
-                [self removeChild:plantis cleanup:YES];
-                [carnivores removeObject:plantis];
-                [carnplants removeObject:plantis];
-                [allplants removeObject:plantis];
-                nplantcc--;
-                powerBar.percentage += 100.0f/TOTAL;
-            }
-        }
-        for (int chu = 0; chu < nmisscc; chu ++)
-        {
-            MissilePlant* plantis = [missplants objectAtIndex:chu];
-            if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
-            {
-                [self removeChild:plantis cleanup:YES];
-                [throwers removeObject:plantis];
-                [missplants removeObject:plantis];
-                [allplants removeObject:plantis];
-                nmisscc--;
-                powerBar.percentage += 100.0f/TOTAL;
-            }
+                if (weapon == 0)
+                {
+                    scissors = [CCSprite spriteWithFile:@"scissors.png"];
+                }
+                else if (weapon == 1)
+                {
+                    scissors = [CCSprite spriteWithFile:@"redscissors.png"];
+                }
+                scissors.position = pos;
+                [scissors setScale:0.15f];
+                [self addChild:scissors z:2];
+                [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.05];
+                [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.1];
+                for (int chu = 0; chu < nallcc; chu ++)
+                {
+                    CCSprite* plantis = [allplants objectAtIndex:chu];
+                    if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+                    {
+                        [self removeChild:plantis cleanup:YES];
+                        [carnivores removeObject:plantis];
+                        [carnplants removeObject:plantis];
+                        [allplants removeObject:plantis];
+                        nallcc--;
+                        powerBar.percentage += 100.0f/TOTAL;
+                    }
+                }
         }
     }
-    
+
     //CHECK IF FLY DIES DEVOURED
     int num = [carnivores count];
-    NSLog(@"Int k is %i", num);
     for (int chu = 0; chu < num; chu ++)
     {
         Plant* item = [carnivores objectAtIndex:chu];
-        int posx =fly.position.x - item.position.x;
-        int posy =fly.position.y - (item.position.y+25);
+        float posx =fly.position.x - item.position.x;
+        float posy =fly.position.y - (item.position.y+25);
         if ((posx < 35) && (posx > -35) && (posy > -20) && (posy < 20))
         {
-            [self performSelector:@selector(gotogameover) withObject:self afterDelay:2.0];
-            [self pauseSchedulerAndActions];
+            [catchingplants addObject:item];
+            [self performSelector:@selector(remov:) withObject:fly afterDelay:0.1];
         }
     }
     
-    //CHECK IF FLY DIES BY MISSILE AND MOVE MISSILE
-    num = [missiles count];
-    for (int chu = 0; chu < num; chu ++)
+    //MOVE BEE
+    if ([self.children containsObject:fly])
     {
-        Missile* item = [missiles objectAtIndex:chu];
-        int posx =fly.position.x - item.position.x;
-        int posy =fly.position.y - item.position.y;
-        if ((posx < 30) && (posx > -30) && (posy > -20) && (posy < 20))
-        {
-            //[self performSelector:@selector(gotogameover) withObject:self afterDelay:2.0];
-            //[self pauseSchedulerAndActions];
-        }
-        item.position = ccp( item.position.x + item.direcx, item.position.y + item.direcy);
-        if ((item.position.y > 480)||(item.position.y < 80)||(item.position.x > 320)||(item.position.x < 0))
-        {
-            [self removeChild:item cleanup:YES];
-        }
+        ranx = [fly moveBeeX: counte high: ranx];
+        rany = [fly moveBeeY: counte high: rany];
     }
-    
-    //MOVE FLY
-    ranx = [fly moveBeeX: counte high: ranx];
-    rany = [fly moveBeeY: counte high: rany];
+    else
+    {
+        announcement = [CCSprite spriteWithFile:@"an_gameover.png"];
+        [announcement setPosition:ccp(160,280)];
+        [announcement setScale:0.6f];
+        [self addChild:announcement z:5];
+        [self performSelector:@selector(gotogameover) withObject:self afterDelay:3.0];
+    }
     
     //PLANTS GROW
     int nplantc = [carnplants count];
@@ -332,54 +221,12 @@ int nmiss;
         {
             Plant* plantis = [carnplants objectAtIndex:chu];
             [plantis growPlant: carnivores];
+            [plantis catchFly: catchingplants];
         }
     }
-    
-    //MISSILEPLANTS GROW
-    int nmissc = [missplants count];
-    for (int chu = 0; chu < nmissc; chu ++)
-    {
-        int conn = counte%6;
-        if(conn == 1)
-        {
-            MissilePlant* plantis = [missplants objectAtIndex:chu];
-            [plantis growMiss: throwers];
-        }
-    }
-
-    
-    //MISSILEPLANT THROWS MISSILE
-    num = [throwers count];
-    for (int chu = 0; chu < num; chu ++)
-    {
-        int rrr = arc4random()%400;
-        if(rrr == 0)
-        {
-            MissilePlant* item = [throwers objectAtIndex:chu];
-                if (item.thrower==0)
-                {
-                    mm = [[Missile alloc] initWithMissileImage];
-                    [mm setPosition:item.position];
-                    [mm setScale:0.4f];
-                    [self addChild:mm z:2];
-                    [missiles addObject:mm];
-                    int posx =fly.position.x - item.position.x;
-                    int posy =fly.position.y - item.position.y;
-                    mm.direcx = posx/100.0f;
-                    mm.direcy = posy/100.0f;
-                    //float amp = sqrtf(mm.direcx * mm.direcx + mm.direcy * mm.direcy);
-                    //float kx = mm.direcx;
-                    //mm.direcx = kx / amp;
-                    //float ky = mm.direcy;
-                    //mm.direcy = ky / amp;
-                    item.thrower++;
-                }
-        }
-    }
-    
     
     //NEW PLANT APPEARS
-    int ntotal = nplantc + nmissc;
+    int ntotal = nplantc;
     int diffty = 5 + DIFFICULTY * ntotal;
     int rando = arc4random()%diffty;
     if((rando == 0) && (nplant < PLANTS))
@@ -410,43 +257,12 @@ int nmiss;
             }
         }
     }
-    
-    //NEW MISSILEPLANT APPEARS
-    diffty = 30 + DIFFICULTY * ntotal;
-    rando = arc4random()%diffty;
-    if((rando == 0) && (nmiss < MISSES))
-    {
-        int correct = 0;
-        int px = 40 + arc4random()%240;
-        int py = 120 + arc4random()%320;
-        CGPoint randpos = ccp(px, py);
-        for (int chu = 0; chu < ntotal; chu ++)
-        {
-           CCSprite* item = [allplants objectAtIndex:chu];
-            if (((randpos.x-item.position.x>70) || (randpos.x-item.position.x<-70)) || ((randpos.y-item.position.y>70) || (randpos.y-item.position.y<-70)))
-            {
-                correct++;
-            }
-        }
-        if (((randpos.x-fly.position.x>100) || (randpos.x-fly.position.x<-100)) || ((randpos.y-fly.position.y>100) || (randpos.y-fly.position.y<-100)))
-        {
-            if (correct==ntotal)
-            {
-                newmiss = [[MissilePlant alloc] initWithPlantImage];
-                [newmiss setPosition:randpos];
-                [newmiss setScale:0.125f];
-                [self addChild:newmiss z:1 tag:nmiss];
-                [missplants addObject:newmiss];
-                [allplants addObject:newmiss];
-                nmiss++;
-            }
-        }
     }
 }
 
 -(void) gotogameover
 {
-    [[CCDirector sharedDirector] replaceScene: [[GameOverLayer alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[StartLayer alloc] init]];
 }
 
 -(void) gotocongrats
@@ -454,13 +270,36 @@ int nmiss;
     [[CCDirector sharedDirector] replaceScene: [[CongratsLayer alloc] init]];
 }
 
+-(void) exitGame
+{
+    [[CCDirector sharedDirector] replaceScene: [[StartLayer alloc] init]];
+}
+
 -(void) pauseGame
 {
     [self pauseSchedulerAndActions];
+    CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"resume.png"
+                                                        selectedImage: @"resume_sel.png"
+                                                               target:self
+                                                             selector:@selector(resumeGame)];
+    
+    CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"exit.png"
+                                                        selectedImage: @"exit_sel.png"
+                                                               target:self
+                                                             selector:@selector(exitGame)];
+    
+    pausemenu = [CCMenu menuWithItems:menuItem1, menuItem2, nil];
+    menuItem1.position = ccp(160,320);
+    menuItem2.position = ccp(160,240);
+    pausemenu.position = ccp(0,0);
+    [menuItem1 setScale:0.4f];
+    [menuItem2 setScale:0.4f];
+    [self addChild: pausemenu z:6];
 }
 
 -(void) resumeGame
 {
+    [self removeChild:pausemenu cleanup:YES];
     [self resumeSchedulerAndActions];
 }
 
@@ -476,19 +315,29 @@ int nmiss;
     }
 }
 
--(void) removeScissors
+-(void) remov: (CCSprite*) cosi
 {
-    [self removeChild:scissors cleanup:YES];
+    [self removeChild:cosi cleanup:YES];
 }
 
 -(void) setWeapon0
 {
-    weapon = 0;
+    if (weapon != 0)
+    {
+        weapon = 0;
+        [self addChild: selscissors];
+        [self removeChild: redselscissors cleanup:YES];
+    }
 }
 
 -(void) setWeapon1
 {
-    weapon = 1;
+    if (weapon != 1)
+    {
+        weapon = 1;
+        [self addChild: redselscissors];
+        [self removeChild: selscissors cleanup:YES];
+    }
 }
 
 @end

@@ -10,19 +10,7 @@
 #import "Level1.h"
 #import "Level2.h"
 #import "Level3.h"
-CCSprite *congrats;
-CCSprite *playagain;
-CCSprite *fly;
-CCSprite *bee;
-CCAction *move;
-CCAction *move2;
-NSMutableArray *flies;
-NSMutableArray *bees;
-int counte;
-int ranx;
-int rany;
-int beex;
-int beey;
+#import "Level4.h"
 
 @interface CongratsLayer3 (PrivateMethods)
 @end
@@ -55,7 +43,7 @@ int beey;
         [self addChild:congrats z:1];
         
         playagain = [CCSprite spriteWithFile:@"playagain.png"];
-        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2);
+        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + 80);
         [playagain setScale:0.9f];
         [self addChild:playagain z:1];
         
@@ -74,14 +62,21 @@ int beey;
                                                                    target:self
                                                                  selector:@selector(gotolevel3:)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
-        menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 80);
-        menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 140);
-        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 200);
+        CCMenuItemImage *menuItem4 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
+                                                            selectedImage: @"level3.png"
+                                                                   target:self
+                                                                 selector:@selector(gotolevel4:)];
+        
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, nil];
+        menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 20);
+        menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 80);
+        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 140);
+        menuItem4.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 200);
         myMenu.position = ccp(0, 0);
         [menuItem1 setScale:0.9f];
         [menuItem2 setScale:0.9f];
         [menuItem3 setScale:0.9f];
+        [menuItem4 setScale:0.9f];
         [self addChild: myMenu z:1];
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
@@ -225,6 +220,11 @@ int beey;
 -(void) gotolevel3: (CCMenuItem  *) menuItem
 {
     [[CCDirector sharedDirector] replaceScene: [[Level3 alloc] init]];
+}
+
+-(void) gotolevel4: (CCMenuItem  *) menuItem
+{
+    [[CCDirector sharedDirector] replaceScene: [[Level4 alloc] init]];
 }
 
 @end

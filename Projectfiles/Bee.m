@@ -14,12 +14,12 @@
 
 @implementation Bee
 
-CCAction *move;
-CCAnimation *moving;
-NSMutableArray *bees;
-
 -(id) initWithBeeAnimation
 {
+    self = [super initWithFile:@"bee1.png"];
+    if(!self)
+        return nil;
+    
     [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"bee.plist"];
     CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"bee.png"];
     [self addChild:spriteSheet];
@@ -28,9 +28,8 @@ NSMutableArray *bees;
     [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee1.png"]];
     [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee2.png"]];
     
-    self = [super initWithFile:@"bee1.png"];
     [self setDisplayFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee1.png"]];
-    self.position = ccp( 200,300);
+    self.position = ccp( 160,280);
     [self setScale:0.4f];
     moving = [CCAnimation animationWithFrames: bees delay:0.1f];
     move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];

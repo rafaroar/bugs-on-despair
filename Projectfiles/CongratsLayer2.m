@@ -10,14 +10,6 @@
 #import "Level1.h"
 #import "Level2.h"
 #import "Level3.h"
-CCSprite *congrats;
-CCSprite *playagain;
-CCSprite *fly;
-CCAction *move;
-NSMutableArray *flies;
-int counte;
-int ranx;
-int rany;
 
 @interface CongratsLayer2 (PrivateMethods)
 @end

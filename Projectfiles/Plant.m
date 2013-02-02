@@ -15,16 +15,7 @@
 @implementation Plant
 @synthesize grow;
 @synthesize currentlife;
-
-CCTexture2D* plantex1;
-CCTexture2D* plantex2;
-CCTexture2D* plantex3;
-CCTexture2D* plantex4;
-CCTexture2D* plantex5;
-CCTexture2D* plantex6;
-CCTexture2D* plantex7;
-CCTexture2D* plantex8;
-CCTexture2D* plantex9;
+@synthesize hunger;
 
 -(id) initWithPlantImage
 {
@@ -37,11 +28,15 @@ CCTexture2D* plantex9;
     plantex7 = [[CCTextureCache sharedTextureCache] addImage:@"carniv7.png"];
     plantex8 = [[CCTextureCache sharedTextureCache] addImage:@"carniv8.png"];
     plantex9 = [[CCTextureCache sharedTextureCache] addImage:@"carniv9.png"];
+    plantex11 = [[CCTextureCache sharedTextureCache] addImage:@"carniv11.png"];
+    plantex12 = [[CCTextureCache sharedTextureCache] addImage:@"carniv12.png"];
+    plantex13 = [[CCTextureCache sharedTextureCache] addImage:@"carniv13.png"];
     
     if ((self = [super initWithTexture:plantex1]))
     {
         grow = 0;
         currentlife = 0;
+        hunger = 0;
     }
     return self;
 }
@@ -89,9 +84,61 @@ CCTexture2D* plantex9;
         self.grow++;
         [carnivores addObject:self];
     }
+    else
+    {
+        if (self.hunger == 0)
+        {
+            [self setTexture: plantex9];
+        }
+        else if (self.hunger == 1)
+        {
+            [self setTexture: plantex11];
+        }
+        else if (self.hunger == 2)
+        {
+            [self setTexture: plantex12];
+            if (![carnivores containsObject:self])
+            {
+                [carnivores addObject:self];
+            }
+        }
+        else if (self.hunger == 3)
+        {
+            [self setTexture: plantex13];
+            [carnivores removeObject:self];
+        }
+    }
+}
+
+-(void) catchFly: (NSMutableArray*)catchingplants
+{
+    if ([catchingplants containsObject:self])
+    {
+        if (self.hunger == 0)
+        {
+            //[self setTexture: plantex9];
+            self.hunger++;
+        }
+        else if (self.hunger == 1)
+        {
+            [self setTexture: plantex11];
+            self.hunger++;
+        }
+        else if (self.hunger == 2)
+        {
+            [self setTexture: plantex12];
+            self.hunger++;
+            if (![catchingplants containsObject:self])
+            {
+            //    [carnivores addObject:self];
+            }
+        }
+        else if (self.hunger == 3)
+        {
+            [self setTexture: plantex13];
+            [catchingplants removeObject:self];
+        }
+    }
 }
 
 @end
-
-
-

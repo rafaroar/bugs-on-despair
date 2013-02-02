@@ -9,14 +9,6 @@
 #import "CongratsLayer.h"
 #import "Level1.h"
 #import "Level2.h"
-CCSprite *congrats;
-CCSprite *playagain;
-CCSprite *fly;
-CCAction *move;
-NSMutableArray *flies;
-int counte;
-int ranx;
-int rany;
 
 @interface CongratsLayer (PrivateMethods)
 @end

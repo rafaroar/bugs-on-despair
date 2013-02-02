@@ -9,6 +9,11 @@
 #import "kobold2d.h"
 
 @interface Bee : CCSprite
+{
+    CCAction *move;
+    CCAnimation *moving;
+    NSMutableArray *bees;
+}
 -(id) initWithBeeAnimation;
 -(float) moveBeeX: (int)counte high: (float)ranx;
 -(float) moveBeeY: (int)counte high: (float)rany;

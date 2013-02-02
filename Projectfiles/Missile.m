@@ -16,15 +16,28 @@
 @synthesize direcx;
 @synthesize direcy;
 
--(id) initWithMissileImage
+-(id) initWithMissileAnimation
 {
-    // This calls CCSprite's init. Basically this init method does everything CCSprite's init method does and then more
-    if ((self = [super initWithFile:@"ship.png"]))
+    
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"missile.plist"];
+    CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"missile.png"];
+    [self addChild:spriteSheet];
+    
+    missys = [NSMutableArray array];
+    [missys addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"missile1.png"]];
+    [missys addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"missile2.png"]];
+    
+    if ((self = [super initWithFile:@"missile1.png"]))
     {
         direcx = 0;
         direcy = 0;
-        //properties work internally just like normal instance variables
     }
+    [self setDisplayFrame:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"missile1.png"]];
+    [self setScale:0.1f];
+    moving = [CCAnimation animationWithFrames: missys delay:0.1f];
+    move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];
+    [self runAction:move];
+    return self;
     return self;
 }
 

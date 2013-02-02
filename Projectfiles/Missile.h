@@ -9,7 +9,13 @@
 #import "kobold2d.h"
 
 @interface Missile : CCSprite
+{
+    CCAction *move;
+    CCAnimation *moving;
+    NSMutableArray *missys;
+}
 @property float direcx;
 @property float direcy;
--(id) initWithMissileImage;
+
+-(id) initWithMissileAnimation;
 @end
