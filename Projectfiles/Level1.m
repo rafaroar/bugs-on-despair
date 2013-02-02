@@ -77,18 +77,18 @@
         catchingplants = [[NSMutableArray alloc] init];
         carnivores = [[NSMutableArray alloc] init];
         
-        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerba.png"]];
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
         powerBar.type = kCCProgressTimerTypeBar;
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
         powerBar.percentage = 0; // (0 - 100)
-        [powerBar setScale:0.2f];
+        [powerBar setScale:0.4f];
         powerBar.position = ccp(160,70);
         [self addChild:powerBar z:2];
         
-        connt = [CCSprite spriteWithFile:@"powerbacontainer.png"];
+        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
         [connt setPosition:ccp(160,70)];
-        [connt setScale:0.2f];
+        [connt setScale:0.4f];
         [self addChild:connt z:1];
         
         selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];

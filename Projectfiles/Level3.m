@@ -74,7 +74,7 @@
         
         redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
         blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
-        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explo.png"];
+        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
         plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
         
         bee = [[Bee alloc] initWithBeeAnimation];
@@ -110,18 +110,18 @@
         [allplantsandbugs addObject:fly];
         [allplantsandbugs addObject:bee];
         
-        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerba.png"]];
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
         powerBar.type = kCCProgressTimerTypeBar;
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
         powerBar.percentage = 0; // (0 - 100)
-        [powerBar setScale:0.2f];
+        [powerBar setScale:0.4f];
         powerBar.position = ccp(160,70);
         [self addChild:powerBar z:2];
         
-        connt = [CCSprite spriteWithFile:@"powerbacontainer.png"];
+        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
         [connt setPosition:ccp(160,70)];
-        [connt setScale:0.2f];
+        [connt setScale:0.4f];
         [self addChild:connt z:1];
         
         selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
@@ -298,9 +298,9 @@
                 float posy = bog.position.y - item.position.y;
                 if ((posx < 30) && (posx > -30) && (posy > -20) && (posy < 20))
                 {
-                    expplos = [CCSprite spriteWithFile:@"explo.png"];
+                    expplos = [CCSprite spriteWithFile:@"explosion.png"];
                     [expplos setPosition:ccp(bog.position.x,bog.position.y)];
-                    [expplos setScale:0.1f];
+                    [expplos setScale:0.2f];
                     [self addChild:expplos z:4];
                     [self performSelector:@selector(remov:) withObject:expplos afterDelay:0.5];
                     [self removeChild:item cleanup:YES];
@@ -521,7 +521,7 @@
 -(void)explode
 {
     [bom setTexture: explosion];
-    [bom setScale: 0.9f];
+    [bom setScale: 1.7f];
     [self performSelector:@selector(remov:) withObject:bom afterDelay:0.3];
     int num = [allplants count];
     for (int chu = 0; chu < num; chu ++)
