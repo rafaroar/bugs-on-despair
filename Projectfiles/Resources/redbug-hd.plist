@@ -7,28 +7,28 @@
             <key>redbug1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
             <key>redbug2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,84},{107,84}}</string>
+                <string>{{0,168},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -36,13 +36,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>redbug.png</string>
+            <string>redbug-hd.png</string>
             <key>size</key>
-            <string>{128,256}</string>
+            <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:e0b088bcfd2fc6d182c1bce50bde1e4c$</string>
+            <string>$TexturePacker:SmartUpdate:d493b2679301d2d94d06e8d02d31499e$</string>
             <key>textureFileName</key>
-            <string>redbug.png</string>
+            <string>redbug-hd.png</string>
         </dict>
     </dict>
 </plist>

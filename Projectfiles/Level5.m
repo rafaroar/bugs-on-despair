@@ -118,7 +118,7 @@
         [allplantsandbugs addObject:bee];
         [allplantsandbugs addObject:rbug];
         
-        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerba.png"]];
         powerBar.type = kCCProgressTimerTypeBar;
         powerBar.midpoint = ccp(0,0); // starts from left
         powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
@@ -127,7 +127,7 @@
         powerBar.position = ccp(160,70);
         [self addChild:powerBar z:2];
         
-        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
+        connt = [CCSprite spriteWithFile:@"powerbacontainer.png"];
         [connt setPosition:ccp(160,70)];
         [connt setScale:0.1f];
         [self addChild:connt z:1];

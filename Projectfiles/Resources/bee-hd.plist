@@ -7,28 +7,28 @@
             <key>bee1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
             <key>bee2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,84},{107,84}}</string>
+                <string>{{0,168},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -36,13 +36,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>bee.png</string>
+            <string>bee-hd.png</string>
             <key>size</key>
-            <string>{128,256}</string>
+            <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:9b6de7ba7461fec3490501c9d4b19f8a$</string>
+            <string>$TexturePacker:SmartUpdate:0ed8131501d282f24eacd6efbf819380$</string>
             <key>textureFileName</key>
-            <string>bee.png</string>
+            <string>bee-hd.png</string>
         </dict>
     </dict>
 </plist>

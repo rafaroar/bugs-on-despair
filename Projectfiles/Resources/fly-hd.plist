@@ -7,28 +7,28 @@
             <key>fly1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
             <key>fly2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,84},{107,84}}</string>
+                <string>{{0,168},{214,168}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{107,84}}</string>
+                <string>{{0,0},{214,168}}</string>
                 <key>sourceSize</key>
-                <string>{107,84}</string>
+                <string>{214,168}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -36,13 +36,13 @@
             <key>format</key>
             <integer>2</integer>
             <key>realTextureFileName</key>
-            <string>fly.png</string>
+            <string>fly-hd.png</string>
             <key>size</key>
-            <string>{128,256}</string>
+            <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:b775ac05d05a0c53ca59ac68b87c703d$</string>
+            <string>$TexturePacker:SmartUpdate:a76eeae0e5b4e51a27cbb9b45d5c6d97$</string>
             <key>textureFileName</key>
-            <string>fly.png</string>
+            <string>fly-hd.png</string>
         </dict>
     </dict>
 </plist>
