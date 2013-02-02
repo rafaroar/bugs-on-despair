@@ -6,23 +6,16 @@
 //
 //
 
-#import "kobold2d.h"
+@class Redbug;
 
 @interface CongratsLayer5 : CCLayer
 {
     CCSprite *congrats;
     CCSprite *playagain;
-    CCSprite *fly;
-    CCSprite *bee;
-    CCAction *move;
-    CCAction *move2;
-    NSMutableArray *flies;
-    NSMutableArray *bees;
+    Redbug *rbug;
     int counte;
     int ranx;
     int rany;
-    int beex;
-    int beey;
 }
 -(void) draw;
 -(id) init;

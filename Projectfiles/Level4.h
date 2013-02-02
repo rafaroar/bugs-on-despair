@@ -19,12 +19,14 @@
     CCSprite *selbomb;
     CCSprite *announcement;
     CCSprite *connt;
+    CCSprite *expplos;
     Missile *mm;
     Plant *newplant;
     MissilePlant *newmiss;
     CCTexture2D* redclosedscissors;
     CCTexture2D* blueclosedscissors;
     CCTexture2D* explosion;
+    CCTexture2D* plantremains;
     CCAction *move;
     CCAnimation *moving;
     CCProgressTimer* powerBar;
@@ -41,7 +43,6 @@
     NSMutableArray *allplants;
     NSMutableArray *missiles;
     NSMutableArray *darkplants;
-    NSMutableArray *supplants;
     NSMutableArray *allplantsandbugs;
     
     int counte;

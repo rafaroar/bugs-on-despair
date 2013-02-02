@@ -8,13 +8,13 @@
 
 #import "kobold2d.h"
 
+@class Fly;
+
 @interface CongratsLayer2 : CCLayer
 {
     CCSprite *congrats;
     CCSprite *playagain;
-    CCSprite *fly;
-    CCAction *move;
-    NSMutableArray *flies;
+    Fly *fly;
     int counte;
     int ranx;
     int rany;

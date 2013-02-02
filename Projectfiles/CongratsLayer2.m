@@ -10,6 +10,7 @@
 #import "Level1.h"
 #import "Level2.h"
 #import "Level3.h"
+#import "Fly.h"
 
 @interface CongratsLayer2 (PrivateMethods)
 @end
@@ -36,55 +37,43 @@
 {
 	if ((self = [super init]))
 	{
-        congrats = [CCSprite spriteWithFile:@"congrats2.png"];
+        congrats = [CCSprite spriteWithFile:@"title.png"];
         congrats.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
-        [congrats setScale:0.7f];
+        [congrats setScale:0.5f];
         [self addChild:congrats z:1];
         
-        playagain = [CCSprite spriteWithFile:@"playagain.png"];
-        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2);
-        [playagain setScale:0.9f];
+        playagain = [CCSprite spriteWithFile:@"selectlevel.png"];
+        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + 30);
+        [playagain setScale:0.6f];
         [self addChild:playagain z:1];
         
         CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"level1.png"
-                                                            selectedImage: @"level1.png"
+                                                            selectedImage: @"level1_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel1:)];
         
         CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"level2.png"
-                                                            selectedImage: @"level2.png"
+                                                            selectedImage: @"level2_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel2:)];
         
         CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
-                                                            selectedImage: @"level3.png"
+                                                            selectedImage: @"level3_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel3:)];
         
         CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
-        menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 80);
-        menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 140);
-        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 200);
+        menuItem1.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 40);
+        menuItem2.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 100);
+        menuItem3.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 160);
         myMenu.position = ccp(0, 0);
-        [menuItem1 setScale:0.9f];
-        [menuItem2 setScale:0.9f];
-        [menuItem3 setScale:0.9f];
+        [menuItem1 setScale:0.4f];
+        [menuItem2 setScale:0.4f];
+        [menuItem3 setScale:0.4f];
         [self addChild: myMenu z:1];
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
-        CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"fly.png"];
-        [self addChild:spriteSheet];
-        
-        flies = [NSMutableArray array];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly1.png"]];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly2.png"]];
-        
-        fly = [CCSprite spriteWithSpriteFrameName:@"fly1.png"];
-        fly.position = ccp( WIDTH_GAME/2, HEIGHT_GAME/2 + Y_OFF_SET);
-        [fly setScale:0.4f];
-        CCAnimation *moving = [CCAnimation animationWithFrames: flies delay:0.1f];
-        move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];
-        [fly runAction:move];
+        fly = [[Fly alloc] initWithFlyAnimation];
+        [fly setPosition:ccp(160,240)];
         [self addChild:fly z:3];
         
         counte=0;
@@ -98,47 +87,11 @@
 
 -(void) update: (ccTime) delta
 {
-    //move fly
     counte++;
-    int ran = counte % 10;
-    ranx = ranx + 10 - arc4random()%21;
-    rany = rany + 10 - arc4random()%21;
-    if (ran==1)
-    {
-        ranx = ranx + 50 - arc4random()%101;
-        rany = rany + 50 - arc4random()%101;
-    }
-    ranx = ranx - (fly.position.x - 160)/50;
-    rany = rany - (fly.position.y - 280)/50;
-    if ((fly.position.x > 140) && (fly.position.x < 180) && (fly.position.y > 260) && (fly.position.y < 300))
-    {
-        ranx = ranx + (fly.position.x - 160)/5;
-        rany = rany + (fly.position.y - 280)/5;
-    }
-    if ((fly.position.x > 20) && (fly.position.x < 300) && (fly.position.y > 100) && (fly.position.y < 460))
-    {
-        fly.position = ccp( fly.position.x + ranx*delta, fly.position.y + rany*delta);
-    }
-    if (fly.position.x >= 300)
-    {
-        fly.position = ccp( 299, fly.position.y );
-        ranx = -20;
-    }
-    if (fly.position.x <= 20)
-    {
-        fly.position = ccp( 21, fly.position.y );
-        ranx = 20;
-    }
-    if (fly.position.y <= 100)
-    {
-        fly.position = ccp( fly.position.x, 101 );
-        rany = 20;
-    }
-    if (fly.position.y >= 460)
-    {
-        fly.position = ccp( fly.position.x, 459 );
-        rany = -20;
-    }
+    
+    //MOVE FLY
+    ranx = [fly moveFlyX: counte high: ranx];
+    rany = [fly moveFlyY: counte high: rany];
 }
 
 -(void) gotolevel1: (CCMenuItem  *) menuItem

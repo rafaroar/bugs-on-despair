@@ -12,6 +12,7 @@
 #import "Level3.h"
 #import "Level4.h"
 #import "Level5.h"
+#import "Redbug.h"
 
 @interface CongratsLayer5 (PrivateMethods)
 @end
@@ -38,38 +39,38 @@
 {
 	if ((self = [super init]))
 	{
-        congrats = [CCSprite spriteWithFile:@"congrats3.png"];
+        congrats = [CCSprite spriteWithFile:@"title.png"];
         congrats.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
-        [congrats setScale:0.7f];
+        [congrats setScale:0.5f];
         [self addChild:congrats z:1];
         
-        playagain = [CCSprite spriteWithFile:@"playagain.png"];
-        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + 100);
-        [playagain setScale:0.9f];
+        playagain = [CCSprite spriteWithFile:@"selectlevel.png"];
+        playagain.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + 70);
+        [playagain setScale:0.6f];
         [self addChild:playagain z:1];
         
         CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"level1.png"
-                                                            selectedImage: @"level1.png"
+                                                            selectedImage: @"level1_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel1:)];
         
         CCMenuItemImage *menuItem2 = [CCMenuItemImage itemWithNormalImage:@"level2.png"
-                                                            selectedImage: @"level2.png"
+                                                            selectedImage: @"level2_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel2:)];
         
         CCMenuItemImage *menuItem3 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
-                                                            selectedImage: @"level3.png"
+                                                            selectedImage: @"level3_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel3:)];
         
-        CCMenuItemImage *menuItem4 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
-                                                            selectedImage: @"level3.png"
+        CCMenuItemImage *menuItem4 = [CCMenuItemImage itemWithNormalImage:@"level4.png"
+                                                            selectedImage: @"level4_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel4:)];
         
-        CCMenuItemImage *menuItem5 = [CCMenuItemImage itemWithNormalImage:@"level3.png"
-                                                            selectedImage: @"level3.png"
+        CCMenuItemImage *menuItem5 = [CCMenuItemImage itemWithNormalImage:@"level5.png"
+                                                            selectedImage: @"level5_sel.png"
                                                                    target:self
                                                                  selector:@selector(gotolevel5:)];
         
@@ -80,50 +81,20 @@
         menuItem4.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 160);
         menuItem5.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 - 220);
         myMenu.position = ccp(0, 0);
-        [menuItem1 setScale:0.9f];
-        [menuItem2 setScale:0.9f];
-        [menuItem3 setScale:0.9f];
-        [menuItem4 setScale:0.9f];
-        [menuItem5 setScale:0.9f];
+        [menuItem1 setScale:0.4f];
+        [menuItem2 setScale:0.4f];
+        [menuItem3 setScale:0.4f];
+        [menuItem4 setScale:0.4f];
+        [menuItem5 setScale:0.4f];
         [self addChild: myMenu z:1];
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"fly.plist"];
-        CCSpriteBatchNode *spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"fly.png"];
-        [self addChild:spriteSheet];
-        
-        flies = [NSMutableArray array];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly1.png"]];
-        [flies addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"fly2.png"]];
-        
-        fly = [CCSprite spriteWithSpriteFrameName:@"fly1.png"];
-        fly.position = ccp( WIDTH_GAME/2, HEIGHT_GAME/2 + Y_OFF_SET);
-        [fly setScale:0.4f];
-        CCAnimation *moving = [CCAnimation animationWithFrames: flies delay:0.1f];
-        move = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving restoreOriginalFrame:NO]];
-        [fly runAction:move];
-        [self addChild:fly z:3];
-        
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile: @"bee.plist"];
-        CCSpriteBatchNode *spriteSheet2 = [CCSpriteBatchNode batchNodeWithFile:@"bee.png"];
-        [self addChild:spriteSheet2];
-        
-        bees = [NSMutableArray array];
-        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee1.png"]];
-        [bees addObject: [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName: @"bee2.png"]];
-        
-        bee = [CCSprite spriteWithSpriteFrameName:@"bee1.png"];
-        bee.position = ccp( WIDTH_GAME/2 + 40, HEIGHT_GAME/2 + Y_OFF_SET);
-        [bee setScale:0.4f];
-        CCAnimation *moving2 = [CCAnimation animationWithFrames: bees delay:0.1f];
-        move2 = [CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:moving2 restoreOriginalFrame:NO]];
-        [bee runAction:move2];
-        [self addChild:bee z:3];
+        rbug = [[Redbug alloc] initWithRedbugAnimation];
+        [rbug setPosition:ccp(160,240)];
+        [self addChild:rbug z:3];
         
         counte=0;
         ranx=0;
         rany=0;
-        beex=0;
-        beey=0;
         
         [self scheduleUpdate];
     }
@@ -132,87 +103,11 @@
 
 -(void) update: (ccTime) delta
 {
-    //move fly
     counte++;
-    int ran = counte % 10;
-    ranx = ranx + 10 - arc4random()%21;
-    rany = rany + 10 - arc4random()%21;
-    if (ran==1)
-    {
-        ranx = ranx + 50 - arc4random()%101;
-        rany = rany + 50 - arc4random()%101;
-    }
-    ranx = ranx - (fly.position.x - 160)/50;
-    rany = rany - (fly.position.y - 280)/50;
-    if ((fly.position.x > 140) && (fly.position.x < 180) && (fly.position.y > 260) && (fly.position.y < 300))
-    {
-        ranx = ranx + (fly.position.x - 160)/5;
-        rany = rany + (fly.position.y - 280)/5;
-    }
-    if ((fly.position.x > 20) && (fly.position.x < 300) && (fly.position.y > 100) && (fly.position.y < 460))
-    {
-        fly.position = ccp( fly.position.x + ranx*delta, fly.position.y + rany*delta);
-    }
-    if (fly.position.x >= 300)
-    {
-        fly.position = ccp( 299, fly.position.y );
-        ranx = -20;
-    }
-    if (fly.position.x <= 20)
-    {
-        fly.position = ccp( 21, fly.position.y );
-        ranx = 20;
-    }
-    if (fly.position.y <= 100)
-    {
-        fly.position = ccp( fly.position.x, 101 );
-        rany = 20;
-    }
-    if (fly.position.y >= 460)
-    {
-        fly.position = ccp( fly.position.x, 459 );
-        rany = -20;
-    }
     
-    //move bee
-    beex = beex + 10 - arc4random()%21;
-    beey = beey + 10 - arc4random()%21;
-    if (ran==6)
-    {
-        beex = beex + 50 - arc4random()%101;
-        beey = beey + 50 - arc4random()%101;
-    }
-    beex = beex - (bee.position.x - 160)/50;
-    beey = beey - (bee.position.y - 280)/50;
-    if ((bee.position.x > 140) && (bee.position.x < 180) && (bee.position.y > 260) && (bee.position.y < 300))
-    {
-        beex = beex + (bee.position.x - 160)/5;
-        beey = beey + (bee.position.y - 280)/5;
-    }
-    if ((bee.position.x > 20) && (bee.position.x < 300) && (bee.position.y > 100) && (bee.position.y < 460))
-    {
-        bee.position = ccp( bee.position.x + beex*delta/3, bee.position.y + beey*delta/3);
-    }
-    if (bee.position.x >= 300)
-    {
-        bee.position = ccp( 299, bee.position.y );
-        beex = -20;
-    }
-    if (bee.position.x <= 20)
-    {
-        bee.position = ccp( 21, bee.position.y );
-        beex = 20;
-    }
-    if (bee.position.y <= 100)
-    {
-        bee.position = ccp( bee.position.x, 101 );
-        beey = 20;
-    }
-    if (bee.position.y >= 460)
-    {
-        fly.position = ccp( bee.position.x, 459 );
-        beey = -20;
-    }
+    //MOVE REDBUG
+    ranx = [rbug moveRedbugX: counte high: ranx];
+    rany = [rbug moveRedbugY: counte high: rany];
 }
 
 -(void) gotolevel1: (CCMenuItem  *) menuItem

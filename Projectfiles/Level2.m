@@ -155,30 +155,33 @@
             CGPoint pos = [input locationOfAnyTouchInPhase:KKTouchPhaseAny];
             if (pos.y > Y_OFF_SET - 10)
             {
-                if (weapon == 0)
+                if (!([self.children containsObject:scissors]))
                 {
-                    scissors = [CCSprite spriteWithFile:@"scissors.png"];
-                }
-                else if (weapon == 1)
-                {
-                    scissors = [CCSprite spriteWithFile:@"redscissors.png"];
-                }
-                scissors.position = pos;
-                [scissors setScale:0.15f];
-                [self addChild:scissors z:2];
-                [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.05];
-                [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.1];
-                for (int chu = 0; chu < nallcc; chu ++)
-                {
-                    CCSprite* plantis = [allplants objectAtIndex:chu];
-                    if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+                    if (weapon == 0)
                     {
-                        [self removeChild:plantis cleanup:YES];
-                        [carnivores removeObject:plantis];
-                        [carnplants removeObject:plantis];
-                        [allplants removeObject:plantis];
-                        nallcc--;
-                        powerBar.percentage += 100.0f/TOTAL;
+                        scissors = [CCSprite spriteWithFile:@"scissors.png"];
+                    }
+                    else if (weapon == 1)
+                    {
+                        scissors = [CCSprite spriteWithFile:@"redscissors.png"];
+                    }
+                    scissors.position = pos;
+                    [scissors setScale:0.15f];
+                    [self addChild:scissors z:2];
+                    [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.1];
+                    [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.2];
+                    for (int chu = 0; chu < nallcc; chu ++)
+                    {
+                        CCSprite* plantis = [allplants objectAtIndex:chu];
+                        if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+                        {
+                            [self removeChild:plantis cleanup:YES];
+                            [carnivores removeObject:plantis];
+                            [carnplants removeObject:plantis];
+                            [allplants removeObject:plantis];
+                            nallcc--;
+                            powerBar.percentage += 100.0f/TOTAL;
+                        }
                     }
                 }
             }
@@ -210,7 +213,7 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
-            [self performSelector:@selector(gotogameover) withObject:self afterDelay:3.0];
+            [self performSelector:@selector(gotogameover) withObject:self afterDelay:4.0];
         }
         
         //PLANTS GROW

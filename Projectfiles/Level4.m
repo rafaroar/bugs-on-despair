@@ -74,6 +74,7 @@
         redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
         blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
         explosion = [[CCTextureCache sharedTextureCache] addImage:@"explo.png"];
+        plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
         
         fly = [[Redbug alloc] initWithRedbugAnimation];
         [self addChild:fly z:3];
@@ -94,7 +95,6 @@
         throwers = [[NSMutableArray alloc] init];
         missiles = [[NSMutableArray alloc] init];
         darkplants = [[NSMutableArray alloc] init];
-        supplants = [[NSMutableArray alloc] init];
         bugs = [[NSMutableArray alloc] init];
         [bugs addObject:fly];
         allplantsandbugs = [[NSMutableArray alloc] init];
@@ -182,44 +182,49 @@
             {
                 if (weapon == 2)
                 {
-                    bom = [[Bomb alloc] initWithBombImage];
-                    [bom setPosition:pos];
-                    [self addChild:bom z:2];
-                    [supplants addObject: allplants];
-                    [supplants addObject: darkplants];
-                    [self performSelector:@selector(explode) withObject:self afterDelay:2.0];
-                    [supplants removeObject: allplants];
-                    [supplants removeObject: darkplants];
+                    if ([self.children containsObject:bom])
+                    {
+                    }
+                    else
+                    {
+                        bom = [[Bomb alloc] initWithBombImage];
+                        [bom setPosition:pos];
+                        [self addChild:bom z:2];
+                        [self performSelector:@selector(explode) withObject:self afterDelay:2.0];
+                    }
                 }
                 else
                 {
-                    if (weapon == 0)
+                    if (!([self.children containsObject:scissors]))
                     {
-                        scissors = [CCSprite spriteWithFile:@"scissors.png"];
-                    }
-                    else if (weapon == 1)
-                    {
-                        scissors = [CCSprite spriteWithFile:@"redscissors.png"];
-                    }
-                    scissors.position = pos;
-                    [scissors setScale:0.15f];
-                    [self addChild:scissors z:2];
-                    [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.05];
-                    [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.1];
-                    for (int chu = 0; chu < nallcc; chu ++)
-                    {
-                        CCSprite* plantis = [allplants objectAtIndex:chu];
-                        if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+                        if (weapon == 0)
                         {
-                            [self removeChild:plantis cleanup:YES];
-                            [carnivores removeObject:plantis];
-                            [carnplants removeObject:plantis];
-                            [allplants removeObject:plantis];
-                            [allplantsandbugs removeObject:plantis];
-                            [throwers removeObject:plantis];
-                            [missplants removeObject:plantis];
-                            nallcc--;
-                            powerBar.percentage += 100.0f/TOTAL;
+                            scissors = [CCSprite spriteWithFile:@"scissors.png"];
+                        }
+                        else if (weapon == 1)
+                        {
+                            scissors = [CCSprite spriteWithFile:@"redscissors.png"];
+                        }
+                        scissors.position = pos;
+                        [scissors setScale:0.15f];
+                        [self addChild:scissors z:2];
+                        [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.1];
+                        [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.2];
+                        for (int chu = 0; chu < nallcc; chu ++)
+                        {
+                            CCSprite* plantis = [allplants objectAtIndex:chu];
+                            if ([input isAnyTouchOnNode:plantis touchPhase:KKTouchPhaseAny])
+                            {
+                                [self removeChild:plantis cleanup:YES];
+                                [carnivores removeObject:plantis];
+                                [carnplants removeObject:plantis];
+                                [allplants removeObject:plantis];
+                                [allplantsandbugs removeObject:plantis];
+                                [throwers removeObject:plantis];
+                                [missplants removeObject:plantis];
+                                nallcc--;
+                                powerBar.percentage += 100.0f/TOTAL;
+                            }
                         }
                     }
                 }
@@ -230,7 +235,8 @@
         for (int chu = 0; chu < ndark; chu ++)
         {
             CCSprite* plantis = [darkplants objectAtIndex:chu];
-            [self removeChild:plantis cleanup:YES];
+            [plantis setTexture:plantremains];
+            [self performSelector:@selector(remov:) withObject:plantis afterDelay:4.0];
             [carnivores removeObject:plantis];
             [carnplants removeObject:plantis];
             [throwers removeObject:plantis];
@@ -257,6 +263,7 @@
                 {
                     [catchingplants addObject:item];
                     [bugs removeObject:bog];
+                    [allplantsandbugs removeObject:bog];
                     numm--;
                     [self performSelector:@selector(remov:) withObject:bog afterDelay:0.1];
                 }
@@ -275,10 +282,17 @@
                 float posy = bog.position.y - item.position.y;
                 if ((posx < 30) && (posx > -30) && (posy > -20) && (posy < 20))
                 {
-                    [item setTexture:explosion];
-                    [self performSelector:@selector(remov:) withObject:item afterDelay:0.2];
-                    [bugs removeObject:bog];
+                    expplos = [CCSprite spriteWithFile:@"explo.png"];
+                    [expplos setPosition:ccp(bog.position.x,bog.position.y)];
+                    [expplos setScale:0.1f];
+                    [self addChild:expplos z:4];
+                    [self performSelector:@selector(remov:) withObject:expplos afterDelay:0.5];
+                    [self removeChild:item cleanup:YES];
+                    [missiles removeObject:item];
+                    num--;
                     numm--;
+                    [bugs removeObject:bog];
+                    [allplantsandbugs removeObject:bog];
                     [self performSelector:@selector(remov:) withObject:bog afterDelay:0.1];
                 }
             }
@@ -289,6 +303,8 @@
             if ((item.position.y > 480)||(item.position.y < 80)||(item.position.x > 320)||(item.position.x < 0))
             {
                 [self removeChild:item cleanup:YES];
+                [missiles removeObject:item];
+                num--;
             }
         }
         
@@ -304,7 +320,7 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
-            [self performSelector:@selector(gotogameover) withObject:self afterDelay:3.0];
+            [self performSelector:@selector(gotogameover) withObject:self afterDelay:4.0];
         }
         
         //PLANTS GROW
@@ -485,18 +501,16 @@
 {
     [bom setTexture: explosion];
     [bom setScale: 0.9f];
-    [self performSelector:@selector(remov:) withObject:bom afterDelay:0.1];
+    [self performSelector:@selector(remov:) withObject:bom afterDelay:0.3];
     int num = [allplants count];
     for (int chu = 0; chu < num; chu ++)
     {
         CCSprite* item = [allplants objectAtIndex:chu];
         float posx =bom.position.x - item.position.x;
         float posy =bom.position.y - item.position.y;
-        if ((posx < 150) && (posx > -150) && (posy > -150) && (posy < 150))
+        if ((posx < 200) && (posx > -200) && (posy > -200) && (posy < 200))
         {
             [darkplants addObject: item];
-            [allplants removeObject: item];
-            num--;
         }
     }
 }
