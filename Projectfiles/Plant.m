@@ -14,7 +14,6 @@
 
 @implementation Plant
 @synthesize grow;
-@synthesize currentlife;
 @synthesize hunger;
 
 -(id) initWithPlantImage
@@ -35,109 +34,81 @@
     if ((self = [super initWithTexture:plantex1]))
     {
         grow = 0;
-        currentlife = 0;
         hunger = 0;
     }
+    if(!self)
+        return nil;
     return self;
 }
 
 -(void) growPlant: (NSMutableArray*)carnivores
 {
-    if (self.grow==0)
+    if (self.grow < 8)
     {
-        [self setTexture: plantex2];
-        self.grow++;
-    }
-    else if (self.grow==1)
-    {
-        [self setTexture: plantex3];
-        self.grow++;
-    }
-    else if (self.grow==2)
-    {
-        [self setTexture: plantex4];
-        self.grow++;
-    }
-    else if (self.grow==3)
-    {
-        [self setTexture: plantex5];
-        self.grow++;
-    }
-    else if (self.grow==4)
-    {
-        [self setTexture: plantex6];
-        self.grow++;
-    }
-    else if (self.grow==5)
-    {
-        [self setTexture: plantex7];
-        self.grow++;
-    }
-    else if (self.grow==6)
-    {
-        [self setTexture: plantex8];
-        self.grow++;
-    }
-    else if (self.grow==7)
-    {
-        [self setTexture: plantex9];
-        self.grow++;
-        [carnivores addObject:self];
-    }
-    else
-    {
-        if (self.hunger == 0)
+        if (self.grow==0)
+        {
+            [self setTexture: plantex2];
+        }
+        else if (self.grow==1)
+        {
+            [self setTexture: plantex3];
+        }
+        else if (self.grow==2)
+        {
+            [self setTexture: plantex4];
+        }
+        else if (self.grow==3)
+        {
+            [self setTexture: plantex5];
+        }
+        else if (self.grow==4)
+        {
+            [self setTexture: plantex6];
+        }
+        else if (self.grow==5)
+        {
+            [self setTexture: plantex7];
+        }
+        else if (self.grow==6)
+        {
+            [self setTexture: plantex8];
+        }
+        else if (self.grow==7)
         {
             [self setTexture: plantex9];
+            [carnivores addObject:self];
         }
-        else if (self.hunger == 1)
-        {
-            [self setTexture: plantex11];
-        }
-        else if (self.hunger == 2)
-        {
-            [self setTexture: plantex12];
-            if (![carnivores containsObject:self])
-            {
-                [carnivores addObject:self];
-            }
-        }
-        else if (self.hunger == 3)
-        {
-            [self setTexture: plantex13];
-            [carnivores removeObject:self];
-        }
+        self.grow++;
     }
-}
-
--(void) catchFly: (NSMutableArray*)catchingplants
-{
-    if ([catchingplants containsObject:self])
+    if (self.hunger > 0)
     {
-        if (self.hunger == 0)
-        {
-            //[self setTexture: plantex9];
-            self.hunger++;
-        }
-        else if (self.hunger == 1)
+        if (self.hunger == 2)
         {
             [self setTexture: plantex11];
-            self.hunger++;
-        }
-        else if (self.hunger == 2)
-        {
-            [self setTexture: plantex12];
-            self.hunger++;
-            if (![catchingplants containsObject:self])
-            {
-            //    [carnivores addObject:self];
-            }
         }
         else if (self.hunger == 3)
         {
-            [self setTexture: plantex13];
-            [catchingplants removeObject:self];
+            [self setTexture: plantex12];
         }
+        else if (self.hunger == 4)
+        {
+            [self setTexture: plantex13];
+        }
+        else if (self.hunger == 50)
+        {
+            [self setTexture: plantex12];
+        }
+        else if (self.hunger == 55)
+        {
+            [self setTexture: plantex11];
+        }
+        else if (self.hunger == 60)
+        {
+            [self setTexture: plantex9];
+            [carnivores addObject:self];
+            self.hunger = -1;
+        }
+        self.hunger++;
     }
 }
 

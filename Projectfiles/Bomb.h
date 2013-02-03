@@ -11,8 +11,6 @@
 @interface Bomb : CCSprite
 {
     CCTexture2D* bomtex;
-    CCTexture2D* explosion;
 }
 -(id) initWithBombImage;
--(void)explode: (NSMutableArray*)supplants;
 @end

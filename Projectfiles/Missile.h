@@ -16,6 +16,7 @@
 }
 @property float direcx;
 @property float direcy;
-
+@property float reorder;
 -(id) initWithMissileAnimation;
+-(id) initWithMissileAnimationLeft;
 @end

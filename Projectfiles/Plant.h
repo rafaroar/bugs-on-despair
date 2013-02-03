@@ -24,9 +24,7 @@
     CCTexture2D* plantex13;
 }
 @property int grow;
-@property int currentlife;
 @property int hunger;
 -(id) initWithPlantImage;
 -(void) growPlant: (NSMutableArray*)carnivores;
--(void) catchFly: (NSMutableArray*)cartchingplants;
 @end

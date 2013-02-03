@@ -17,30 +17,12 @@
 -(id) initWithBombImage
 {
     bomtex = [[CCTextureCache sharedTextureCache] addImage:@"bomb.png"];
-    explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
     
     (self = [super initWithTexture:bomtex]);
+    if(!self)
+        return nil;
     [self setScale:0.1f];
     return self;
-}
-
--(void)explode:(NSMutableArray *)supplants
-{
-    [self setTexture: explosion];
-    NSMutableArray* allp = [supplants objectAtIndex:0];
-    NSMutableArray* darkp = [supplants objectAtIndex:1];
-    int num = [allp count];
-    for (int chu = 0; chu < num; chu ++)
-    {
-        CCSprite* item = [allp objectAtIndex:chu];
-        int posx =self.position.x - item.position.x;
-        int posy =self.position.y - item.position.y;
-        if ((posx < 100) && (posx > -100) && (posy > -100) && (posy < 100))
-        {
-            [darkp addObject: item];
-            [allp removeObject: item];
-        }
-    }
 }
 
 @end

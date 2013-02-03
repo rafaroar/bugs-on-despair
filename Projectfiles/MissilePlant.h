@@ -22,9 +22,13 @@
     CCTexture2D* plantex10;
     CCTexture2D* shooting1;
     CCTexture2D* shooting2;
+    CCTexture2D* shootingleft1;
+    CCTexture2D* shootingleft2;
 }
 @property int grow;
 @property int thrower;
+@property int shoot;
+@property int side;
 -(id) initWithPlantImage;
 -(void) growMiss: (NSMutableArray*)throwers;
 @end

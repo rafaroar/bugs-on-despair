@@ -8,19 +8,17 @@
 
 #import "kobold2d.h"
 
-@class Fly, Bee;
+@class Fly, Bee, Global;
 
 @interface StartLayer : CCLayer
 {
     CCSprite *title;
     CCSprite *save;
+    CCSprite *announcement;
     Fly *fly;
     Bee *bee;
+    Global *sm;
     int counte;
-    float ranx;
-    float rany;
-    float beex;
-    float beey;
 }
 -(void) draw;
 -(id) init;

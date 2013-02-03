@@ -8,20 +8,22 @@
 
 #import "kobold2d.h"
 
-@class Bee, Fly, Redbug;
+@class Bee, Fly, Redbug, Global;
 
 @interface Congrats : CCLayer
 {
     ccColor4F color;
     CCSprite *congrats;
     CCSprite *playagain;
+    CCSprite *announcement;
     Bee *bee;
     Fly *fly;
     Redbug *rbug;
-    NSMutableArray *levelArray;
+    Global *sm;
     NSMutableArray *bugs;
     int counte;
     float height;
+    float spacing;
 }
 -(void) draw;
 -(id) init;

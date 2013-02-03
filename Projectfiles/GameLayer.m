@@ -1,13 +1,14 @@
 //
-//  Level5.m
+//  GameLayer.m
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 01/02/13.
+//  Created by Andrea Rodríguez Arguedas on 03/02/13.
 //
 //
 
-#import "Level5.h"
+#import "GameLayer.h"
 #import "Congrats.h"
+#import "StartLayer.h"
 #import "Plant.h"
 #import "Missile.h"
 #import "MissilePlant.h"
@@ -17,29 +18,57 @@
 #import "Bomb.h"
 #import "Global.h"
 
-@interface Level5 (PrivateMethods)
+@interface GameLayer (PrivateMethods)
 @end
 
-@implementation Level5
-
-#define Y_OFF_SET 80
-#define WIDTH_WINDOW 320
-#define HEIGHT_WINDOW 480
-#define CELL_WIDTH 80
-#define DIFFICULTY 13
-#define INITIAL_TIME 600
-#define WIDTH_GAME WIDTH_WINDOW
-#define HEIGHT_GAME (HEIGHT_WINDOW - Y_OFF_SET)
-#define NUM_ROWS (HEIGHT_GAME / CELL_WIDTH)
-#define NUM_COLUMNS (WIDTH_GAME / CELL_WIDTH)
-#define PLANTS 30
-#define MISSES 20
-#define TOTAL (PLANTS + MISSES)
+@implementation GameLayer
 
 -(id) init
 {
 	if ((self = [super init]))
 	{
+        sm = [Global sharedManager];
+        
+        redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
+        blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
+        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
+        plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
+        
+        counte=0;
+        weapon=0;
+        nplant=0;
+        nmiss=0;
+        
+        allplants = [[NSMutableArray alloc] init];
+        carnplants = [[NSMutableArray alloc] init];
+        missplants = [[NSMutableArray alloc] init];
+        carnivores = [[NSMutableArray alloc] init];
+        throwers = [[NSMutableArray alloc] init];
+        missiles = [[NSMutableArray alloc] init];
+        darkplants = [[NSMutableArray alloc] init];
+        bugs = [[NSMutableArray alloc] init];
+        allplantsandbugs = [[NSMutableArray alloc] init];
+        
+        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
+        powerBar.type = kCCProgressTimerTypeBar;
+        powerBar.midpoint = ccp(0,0); // starts from left
+        powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
+        powerBar.percentage = 0; // (0 - 100)
+        [powerBar setScale:0.4f];
+        powerBar.position = ccp(160,70);
+        [self addChild:powerBar z:2];
+        
+        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
+        [connt setPosition:ccp(160,70)];
+        [connt setScale:0.4f];
+        [self addChild:connt z:1];
+        
+        selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
+        [selscissors setScale:0.1f];
+        redselscissors = [CCSprite spriteWithFile:@"redscissors_sel.png"];
+        [redselscissors setScale:0.1f];
+        [self addChild:selscissors z:1];
+        
         CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"pause.png"
                                                             selectedImage: @"pause_sel.png"
                                                                    target:self
@@ -60,93 +89,202 @@
                                                                    target:self
                                                                  selector:@selector(setWeapon2)];
         
-        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, menuItem4, nil];
+        CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
         menuItem1.position = ccp(240,30);
-        menuItem2.position = ccp(40,35);
-        menuItem3.position = ccp(90,35);
-        menuItem4.position = ccp(140,35);
-        myMenu.position = ccp(0,0);
         [menuItem1 setScale:0.4f];
         [menuItem2 setScale:0.1f];
         [menuItem3 setScale:0.1f];
-        [menuItem4 setScale:0.1f];
+        myMenu.position = ccp(0,0);
         [self addChild: myMenu z:1];
         
-        redclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"redscissors_closed.png"];
-        blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
-        explosion = [[CCTextureCache sharedTextureCache] addImage:@"explosion.png"];
-        plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
+        if (sm.level < 3)
+        {
+            menuItem2.position = ccp(50,35);
+            menuItem3.position = ccp(110,35);
+            [selscissors setPosition:ccp(50,35)];
+            [redselscissors setPosition:ccp(110,35)];
+            
+            if (sm.level == 1)
+            {
+                color = ccc4f(0.2, 0.6, 0.2, 1);
+                difficulty = 20;
+                plants = 15;
+                misses = 0;
+                
+                bee = [[Bee alloc] initWithBeeAnimation];
+                [bee setBugSpeed:bee.speed];
+                [self addChild:bee z:4];
+                [bugs addObject:bee];
+                [allplantsandbugs addObject:bee];
+                
+                announcement2 = [CCSprite spriteWithFile:@"cutplants.png"];
+                [announcement2 setPosition:ccp(110,60)];
+                [announcement2 setScale:0.3f];
+                [self addChild:announcement2 z:5];
+            }
+            else
+            {
+                color = ccc4f(0.1, 0.4, 0.5, 1);
+                difficulty = 18;
+                plants = 22;
+                misses = 0;
+                
+                fly = [[Fly alloc] initWithFlyAnimation];
+                [fly setBugSpeed:fly.speed];
+                [self addChild:fly z:4];
+                [bugs addObject:fly];
+                [allplantsandbugs addObject:fly];
+            }
+        }
+        else
+        {
+            [myMenu addChild:menuItem4];
+            menuItem2.position = ccp(40,35);
+            menuItem3.position = ccp(90,35);
+            menuItem4.position = ccp(140,35);
+            [menuItem4 setScale:0.1f];
+            [selscissors setPosition:ccp(40,35)];
+            [redselscissors setPosition:ccp(90,35)];
+            selbomb = [CCSprite spriteWithFile:@"bomb_sel.png"];
+            [selbomb setPosition:ccp(140,35)];
+            [selbomb setScale:0.1f];
+            
+            if (sm.level == 3)
+            {
+                color = ccc4f(0.3, 0.7, 0.3, 1);
+                difficulty = 18;
+                plants = 0;
+                misses = 20;
+                
+                bee = [[Bee alloc] initWithBeeAnimation];
+                [bee setBugSpeed:bee.speed];
+                [fly setPosition:ccp(160,310)];
+                [self addChild:bee z:4];
+                [bugs addObject:bee];
+                [allplantsandbugs addObject:bee];
+                
+                fly = [[Fly alloc] initWithFlyAnimation];
+                [fly setBugSpeed:fly.speed];
+                [fly setPosition:ccp(160,250)];
+                [self addChild:fly z:4];
+                [bugs addObject:fly];
+                [allplantsandbugs addObject:fly];
+                
+                announcement2 = [CCSprite spriteWithFile:@"trythebomb.png"];
+                [announcement2 setPosition:ccp(140,60)];
+                [announcement2 setScale:0.3f];
+                [self addChild:announcement2 z:5];
+            }
+            else if (sm.level == 4)
+            {
+                color = ccc4f(0.3, 0.4, 0.5, 1);
+                difficulty = 16;
+                plants = 20;
+                misses = 10;
+                
+                for (int chu = 0; chu < 2; chu ++)
+                {
+                    rbug = [[Redbug alloc] initWithRedbugAnimation];
+                    [rbug setBugSpeed:rbug.speed];
+                    [rbug setPosition:ccp(160,250+chu*60)];
+                    [self addChild:rbug z:4 tag:chu];
+                    [bugs addObject:rbug];
+                    [allplantsandbugs addObject:rbug];
+                }
+            }
+            else if (sm.level == 5)
+            {
+                color = ccc4f(0.6, 0.3, 0.3, 1);
+                difficulty = 13;
+                plants = 30;
+                misses = 20;
+                
+                bee = [[Bee alloc] initWithBeeAnimation];
+                [bee setBugSpeed:bee.speed];
+                [bee setPosition:ccp(160,330)];
+                [self addChild:bee z:4];
+                [bugs addObject:bee];
+                [allplantsandbugs addObject:bee];
+                
+                fly = [[Fly alloc] initWithFlyAnimation];
+                [fly setBugSpeed:fly.speed];
+                [self addChild:fly z:4];
+                [bugs addObject:fly];
+                [allplantsandbugs addObject:fly];
+                
+                rbug = [[Redbug alloc] initWithRedbugAnimation];
+                [rbug setBugSpeed:rbug.speed];
+                [rbug setPosition:ccp(160,230)];
+                [self addChild:rbug z:4];
+                [bugs addObject:rbug];
+                [allplantsandbugs addObject:rbug];
+            }
+            else if (sm.level == 6)
+            {
+                color = ccc4f(0.2, 0.8, 0.3, 1);
+                difficulty = 11;
+                plants = 60;
+                misses = 0;
+                
+                for (int chu = 0; chu < 11; chu ++)
+                {
+                    bee = [[Bee alloc] initWithBeeAnimation];
+                    [bee setBugSpeed:bee.speed];
+                    [bee setPosition:ccp(160,130+chu*30)];
+                    [self addChild:bee z:4 tag:chu];
+                    [bugs addObject:bee];
+                    //[allplantsandbugs addObject:bee];
+                }
+            }
+            else if (sm.level == 7)
+            {
+                color = ccc4f(0.5, 0.6, 0.5, 1);
+                difficulty = 1;
+                plants = 80;
+                misses = 0;
+                
+                fly = [[Fly alloc] initWithFlyAnimation];
+                [fly setBugSpeed:0.004];
+                [self addChild:fly z:4];
+                [bugs addObject:fly];
+                [allplantsandbugs addObject:fly];
+            }
+            else
+            {
+                color = ccc4f(0.4, 0.6, 0.6, 1);
+                difficulty = 8;
+                plants = 70;
+                misses = 30;
+                
+                for (int chu = 0; chu < 7; chu ++)
+                {
+                    bee = [[Bee alloc] initWithBeeAnimation];
+                    [bee setBugSpeed:bee.speed];
+                    [bee setPosition:ccp(120,190+chu*30)];
+                    [self addChild:bee z:4 tag:chu];
+                    [bugs addObject:bee];
+                    //[allplantsandbugs addObject:bee];
+
+                    fly = [[Fly alloc] initWithFlyAnimation];
+                    [fly setBugSpeed:fly.speed];
+                    [fly setPosition:ccp(160,190+chu*30)];
+                    [self addChild:fly z:4];
+                    [bugs addObject:fly];
+                    //[allplantsandbugs addObject:fly];
+
+                    rbug = [[Redbug alloc] initWithRedbugAnimation];
+                    [rbug setBugSpeed:rbug.speed];
+                    [rbug setPosition:ccp(200,190+chu*30)];
+                    [self addChild:rbug z:4];
+                    [bugs addObject:rbug];
+                    //[allplantsandbugs addObject:rbug];
+                }
+            }
+        }
+                
+        total = plants + misses;
         
-        bee = [[Bee alloc] initWithBeeAnimation];
-        [bee setBugSpeed:bee.speed];
-        [bee setPosition:ccp(160,330)];
-        [self addChild:bee z:3];
-        
-        fly = [[Fly alloc] initWithFlyAnimation];
-        [fly setBugSpeed:fly.speed];
-        [fly setPosition:ccp(160,280)];
-        [self addChild:fly z:3];
-        
-        rbug = [[Redbug alloc] initWithRedbugAnimation];
-        [rbug setBugSpeed:rbug.speed];
-        [rbug setPosition:ccp(160,230)];
-        [self addChild:rbug z:3];
-        
-        counte=0;
-        ranx=0;
-        rany=0;
-        beex=0;
-        beey=0;
-        rbux=0;
-        rbuy=0;
-        weapon=0;
-        nplant=0;
-        nmiss=0;
-        
-        allplants = [[NSMutableArray alloc] init];
-        carnplants = [[NSMutableArray alloc] init];
-        catchingplants = [[NSMutableArray alloc] init];
-        releasingplants = [[NSMutableArray alloc] init];
-        missplants = [[NSMutableArray alloc] init];
-        carnivores = [[NSMutableArray alloc] init];
-        throwers = [[NSMutableArray alloc] init];
-        missiles = [[NSMutableArray alloc] init];
-        darkplants = [[NSMutableArray alloc] init];
-        bugs = [[NSMutableArray alloc] init];
-        [bugs addObject:fly];
-        [bugs addObject:bee];
-        [bugs addObject:rbug];
-        allplantsandbugs = [[NSMutableArray alloc] init];
-        [allplantsandbugs addObject:fly];
-        [allplantsandbugs addObject:bee];
-        [allplantsandbugs addObject:rbug];
-        
-        powerBar= [CCProgressTimer progressWithSprite:[CCSprite spriteWithFile:@"powerbar.png"]];
-        powerBar.type = kCCProgressTimerTypeBar;
-        powerBar.midpoint = ccp(0,0); // starts from left
-        powerBar.barChangeRate = ccp(1,0); // grow only in the "x"-horizontal direction
-        powerBar.percentage = 0; // (0 - 100)
-        [powerBar setScale:0.4f];
-        powerBar.position = ccp(160,70);
-        [self addChild:powerBar z:2];
-        
-        connt = [CCSprite spriteWithFile:@"powerbarcontainer.png"];
-        [connt setPosition:ccp(160,70)];
-        [connt setScale:0.4f];
-        [self addChild:connt z:1];
-        
-        selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
-        [selscissors setPosition:ccp(40,35)];
-        [selscissors setScale:0.1f];
-        redselscissors = [CCSprite spriteWithFile:@"redscissors_sel.png"];
-        [redselscissors setPosition:ccp(90,35)];
-        [redselscissors setScale:0.1f];
-        selbomb = [CCSprite spriteWithFile:@"bomb_sel.png"];
-        [selbomb setPosition:ccp(140,35)];
-        [selbomb setScale:0.1f];
-        [self addChild:selscissors z:1];
-        
-        announcement = [CCSprite spriteWithFile:@"an_level5.png"];
+        announcement = [CCSprite spriteWithFile:[NSString stringWithFormat:@"an_level%d.png",sm.level]];
         [announcement setPosition:ccp(160,280)];
         [announcement setScale:0.6f];
         [self addChild:announcement z:5];
@@ -158,13 +296,10 @@
 
 -(void) draw
 {
-    //big green rectangle
     CGPoint c = ccp(0,0 + Y_OFF_SET - 20); //lower-left corner
     CGPoint d = ccp(WIDTH_GAME,HEIGHT_GAME + Y_OFF_SET); //upper-right corner
-    ccColor4F color = ccc4f(0.6, 0.3, 0.3, 1);
     ccDrawSolidRect(c, d, color);
     
-    //lower rectangles
     CGPoint f = ccp(0,0);
     CGPoint g = ccp(WIDTH_WINDOW,70);
     ccColor4F color2 = ccc4f(0.5, 0.1, 0.5, 1);
@@ -177,8 +312,8 @@
     if (counte == 100)
     {
         [self removeChild:announcement cleanup:YES];
+        [self removeChild:announcement2 cleanup:YES];
     }
-    
     else if (counte > 100)
     {
         
@@ -190,9 +325,9 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
-            if (levelunlocked < 5)
+            if (sm.levelunlocked <= sm.level)
             {
-                levelunlocked = 5;
+                sm.levelunlocked = sm.level + 1;
             }
             [self pauseSchedulerAndActions];
         }
@@ -214,7 +349,7 @@
                     {
                         bom = [[Bomb alloc] initWithBombImage];
                         [bom setPosition:pos];
-                        [self addChild:bom z:2];
+                        [self addChild:bom z:3];
                         [self performSelector:@selector(explode) withObject:self afterDelay:2.0];
                     }
                 }
@@ -232,7 +367,7 @@
                         }
                         scissors.position = pos;
                         [scissors setScale:0.15f];
-                        [self addChild:scissors z:2];
+                        [self addChild:scissors z:3];
                         [self performSelector:@selector(closeScissors) withObject:self afterDelay:0.1];
                         [self performSelector:@selector(remov:) withObject:scissors afterDelay:0.2];
                         for (int chu = 0; chu < nallcc; chu ++)
@@ -248,7 +383,7 @@
                                 [throwers removeObject:plantis];
                                 [missplants removeObject:plantis];
                                 nallcc--;
-                                powerBar.percentage += 100.0f/TOTAL;
+                                powerBar.percentage += 100.0f/total;
                             }
                         }
                     }
@@ -270,9 +405,8 @@
             [allplantsandbugs removeObject:plantis];
             [darkplants removeObject:plantis];
             ndark--;
-            powerBar.percentage += 100.0f/TOTAL;
+            powerBar.percentage += 100.0f/total;
         }
-
         
         //CHECK IF BUGS DIE DEVOURED
         int num = [carnivores count];
@@ -287,10 +421,12 @@
                 float posy = bog.position.y - (item.position.y+25);
                 if ((posx < 35) && (posx > -35) && (posy > -20) && (posy < 20))
                 {
-                    [catchingplants addObject:item];
+                    item.hunger++;
+                    [carnivores removeObject:item];
                     [bugs removeObject:bog];
                     [allplantsandbugs removeObject:bog];
                     numm--;
+                    num--;
                     [self performSelector:@selector(remov:) withObject:bog afterDelay:0.1];
                 }
             }
@@ -311,7 +447,7 @@
                     expplos = [CCSprite spriteWithFile:@"explosion.png"];
                     [expplos setPosition:ccp(bog.position.x,bog.position.y)];
                     [expplos setScale:0.2f];
-                    [self addChild:expplos z:4];
+                    [self addChild:expplos z:5];
                     [self performSelector:@selector(remov:) withObject:expplos afterDelay:0.5];
                     [self removeChild:item cleanup:YES];
                     [missiles removeObject:item];
@@ -322,9 +458,11 @@
                     [self performSelector:@selector(remov:) withObject:bog afterDelay:0.1];
                 }
             }
-            //float amp = sqrtf(posx * posx + posy * posy);
-            //float ppx = posx / amp / 4;
-            //float ppy = posy / amp / 4;
+            item.reorder++;
+            if (item.reorder == 30)
+            {
+                [self reorderChild:item z:3];
+            }
             item.position = ccp( item.position.x + item.direcx, item.position.y + item.direcy);
             if ((item.position.y > 480)||(item.position.y < 80)||(item.position.x > 320)||(item.position.x < 0))
             {
@@ -340,12 +478,9 @@
             Bug* bog = [bugs objectAtIndex:i];
             [bog moveBug:counte];
         }
-        if (!([self.children containsObject:fly]||[self.children containsObject:bee]||[self.children containsObject:rbug]))
+        if (numm == 0)
         {
-            announcement = [CCSprite spriteWithFile:@"an_gameover.png"];
-            [announcement setPosition:ccp(160,280)];
-            [announcement setScale:0.6f];
-            [self addChild:announcement z:5];
+            [self performSelector:@selector(announcegameover) withObject:self afterDelay:1.0];
             [self performSelector:@selector(gotogameover) withObject:self afterDelay:4.0];
         }
         
@@ -358,7 +493,6 @@
             {
                 Plant* plantis = [carnplants objectAtIndex:chu];
                 [plantis growPlant: carnivores];
-                [plantis catchFly: catchingplants];
             }
         }
         
@@ -374,42 +508,47 @@
             }
         }
         
-        
         //MISSILEPLANT THROWS MISSILE
         num = [throwers count];
         for (int chu = 0; chu < num; chu ++)
         {
             MissilePlant* item = [throwers objectAtIndex:chu];
-            int rrr = arc4random()%400;
-            if(rrr == 0)
-            {
-                if ((item.thrower==0) && (numm > 0))
+            if ((item.thrower==9) && (numm > 0))
+                item.shoot++;
+                if (item.shoot == 1)
                 {
-                    mm = [[Missile alloc] initWithMissileAnimation];
-                    [mm setPosition:item.position];
-                    [self addChild:mm z:2];
+                    if (item.side == 0)
+                    {
+                        mm = [[Missile alloc] initWithMissileAnimation];
+                    }
+                    else
+                    {
+                        mm = [[Missile alloc] initWithMissileAnimationLeft];
+                    }
+                    int k = 1 - 2*item.side;
+                    [mm setPosition: ccp(item.position.x+10*k,item.position.y+25)];
+                    [self addChild:mm z:1];
                     [missiles addObject:mm];
                     CCSprite* bogz = [bugs objectAtIndex:0];
                     float posx =bogz.position.x - item.position.x;
                     float posy =bogz.position.y - item.position.y;
                     float amp = sqrtf(posx * posx + posy * posy);
-                    mm.direcx = 1 + posx / amp;
+                    mm.direcx = k + posx / amp;
                     mm.direcy = posy / amp;
-                    item.thrower++;
                 }
-                else if (item.thrower==1)
-                {
-                    item.thrower--;
-                }
+            int rrr = arc4random()%150;
+            if(rrr == 0)
+            {
+                item.thrower++;
             }
         }
         
         //NEW PLANT APPEARS
         int ntotal = nplantc + nmissc;
-        int ntotalib = ntotal + numm;
-        int diffty = 5 + DIFFICULTY * ntotal;
+        int ntotalib = [allplantsandbugs count];
+        int diffty = 5 + difficulty * ntotal;
         int rando = arc4random()%diffty;
-        if((rando == 0) && (nplant < PLANTS))
+        if((rando == 0) && (nplant < plants))
         {
             int correct = 0;
             int px = 40 + arc4random()%240;
@@ -428,7 +567,7 @@
                 newplant = [[Plant alloc] initWithPlantImage];
                 [newplant setPosition:randpos];
                 [newplant setScale:0.125f];
-                [self addChild:newplant z:1 tag:nplant];
+                [self addChild:newplant z:2 tag:nplant];
                 [carnplants addObject:newplant];
                 [allplants addObject:newplant];
                 [allplantsandbugs addObject:newplant];
@@ -437,18 +576,19 @@
         }
         
         //NEW MISSILEPLANT APPEARS
-        diffty = 5 + DIFFICULTY * ntotal;
+        diffty = 5 + difficulty * ntotal;
         rando = arc4random()%diffty;
-        if((rando == 0) && (nmiss < MISSES))
+        if((rando == 0) && (nmiss < misses))
         {
             int correct = 0;
-            int px = 40 + arc4random()%60;
+            int chan = arc4random()%2;
+            int px = 20 + chan*230 + arc4random()%50;
             int py = 120 + arc4random()%320;
             CGPoint randpos = ccp(px, py);
             for (int chu = 0; chu < ntotalib; chu ++)
             {
                 CCSprite* item = [allplantsandbugs objectAtIndex:chu];
-                if (((randpos.x-item.position.x>70) || (randpos.x-item.position.x<-70)) || ((randpos.y-item.position.y>70) || (randpos.y-item.position.y<-70)))
+                if (((randpos.x-item.position.x>70) || (randpos.x-item.position.x<-70)) || ((randpos.y-item.position.y>90) || (randpos.y-item.position.y<-90)))
                 {
                     correct++;
                 }
@@ -456,9 +596,10 @@
             if (correct==ntotalib)
             {
                 newmiss = [[MissilePlant alloc] initWithPlantImage];
+                newmiss.side = chan;
                 [newmiss setPosition:randpos];
                 [newmiss setScale:0.125f];
-                [self addChild:newmiss z:1 tag:nmiss];
+                [self addChild:newmiss z:2 tag:nmiss];
                 [missplants addObject:newmiss];
                 [allplants addObject:newmiss];
                 [allplantsandbugs addObject:newmiss];
@@ -470,17 +611,42 @@
 
 -(void) gotogameover
 {
-    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
+    sm.statu = 0;
+    if (sm.levelunlocked == 1)
+    {
+        [[CCDirector sharedDirector] replaceScene: [CCTransitionFade transitionWithDuration:0.5f scene:[[StartLayer alloc] init]]];
+    }
+    else
+    {
+        [[CCDirector sharedDirector] replaceScene: [CCTransitionFade transitionWithDuration:0.5f scene:[[Congrats alloc] init]]];
+    }
 }
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
+    sm.statu = 1;
+    [[CCDirector sharedDirector] replaceScene: [CCTransitionFadeTR transitionWithDuration:0.5f scene:[[Congrats alloc] init]]];
 }
 
 -(void) exitGame
 {
-    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
+    sm.statu = 2;
+    if (sm.levelunlocked == 1)
+    {
+        [[CCDirector sharedDirector] replaceScene: [CCTransitionFade transitionWithDuration:0.5f scene:[[StartLayer alloc] init]]];
+    }
+    else
+    {
+        [[CCDirector sharedDirector] replaceScene: [CCTransitionFade transitionWithDuration:0.5f scene:[[Congrats alloc] init]]];
+    }
+}
+
+-(void) announcegameover
+{
+    announcement = [CCSprite spriteWithFile:@"an_gameover.png"];
+    [announcement setPosition:ccp(160,280)];
+    [announcement setScale:0.6f];
+    [self addChild:announcement z:6];
 }
 
 -(void) pauseGame
@@ -502,7 +668,7 @@
     pausemenu.position = ccp(0,0);
     [menuItem1 setScale:0.4f];
     [menuItem2 setScale:0.4f];
-    [self addChild: pausemenu z:6];
+    [self addChild: pausemenu z:7];
 }
 
 -(void) resumeGame
@@ -526,7 +692,7 @@
 -(void)explode
 {
     [bom setTexture: explosion];
-    [bom setScale: 1.7f];
+    [bom setScale: 1.4f];
     [self performSelector:@selector(remov:) withObject:bom afterDelay:0.3];
     int num = [allplants count];
     for (int chu = 0; chu < num; chu ++)
@@ -534,7 +700,7 @@
         CCSprite* item = [allplants objectAtIndex:chu];
         float posx =bom.position.x - item.position.x;
         float posy =bom.position.y - item.position.y;
-        if ((posx < 200) && (posx > -200) && (posy > -200) && (posy < 200))
+        if ((posx < 150) && (posx > -150) && (posy > -150) && (posy < 150))
         {
             [darkplants addObject: item];
         }
@@ -580,4 +746,3 @@
 }
 
 @end
-

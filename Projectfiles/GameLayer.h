@@ -1,16 +1,16 @@
 //
-//  Level5.h
+//  GameLayer.h
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 01/02/13.
+//  Created by Andrea Rodríguez Arguedas on 03/02/13.
 //
 //
 
 #import "kobold2d.h"
 
-@class Bee, Fly, Redbug, Missile, Plant, MissilePlant, Bomb;
+@class Bee, Fly, Redbug, Missile, Plant, MissilePlant, Bomb, Global;
 
-@interface Level5 : CCLayer
+@interface GameLayer : CCLayer
 {
     Bee *bee;
     Fly *fly;
@@ -20,6 +20,7 @@
     CCSprite *redselscissors;
     CCSprite *selbomb;
     CCSprite *announcement;
+    CCSprite *announcement2;
     CCSprite *connt;
     CCSprite *expplos;
     Missile *mm;
@@ -34,13 +35,13 @@
     CCProgressTimer* powerBar;
     Bomb *bom;
     CCMenu *pausemenu;
+    ccColor4F color;
+    Global *sm;
     
     NSMutableArray *bugs;
     NSMutableArray *carnivores;
     NSMutableArray *throwers;
     NSMutableArray *carnplants;
-    NSMutableArray *catchingplants;
-    NSMutableArray *releasingplants;
     NSMutableArray *missplants;
     NSMutableArray *allplants;
     NSMutableArray *missiles;
@@ -48,15 +49,13 @@
     NSMutableArray *allplantsandbugs;
     
     int counte;
-    float ranx;
-    float rany;
-    float beex;
-    float beey;
-    float rbux;
-    float rbuy;
     int weapon;
     int nplant;
     int nmiss;
+    int difficulty;
+    int plants;
+    int misses;
+    int total;
 }
 -(id) init;
 -(void) draw;
