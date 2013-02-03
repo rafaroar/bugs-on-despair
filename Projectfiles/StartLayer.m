@@ -8,12 +8,9 @@
 
 #import "StartLayer.h"
 #import "Level1.h"
-#import "Level2.h"
-#import "Level3.h"
-#import "GameOverLayer.h"
-#import "CongratsLayer.h"
 #import "Fly.h"
 #import "Bee.h"
+#import "Global.h"
 
 @interface StartLayer (PrivateMethods)
 @end
@@ -40,6 +37,8 @@
 {
 	if ((self = [super init]))
 	{
+        levelunlocked = 1;
+        
         title = [CCSprite spriteWithFile:@"title.png"];
         title.position = ccp( WIDTH_GAME/2, HEIGHT_WINDOW/2 + Y_OFF_SET*2);
         [title setScale:0.5f];
@@ -62,9 +61,11 @@
         [self addChild: myMenu z:1];
         
         bee = [[Bee alloc] initWithBeeAnimation];
+        [bee setBugSpeed:bee.speed];
         [self addChild:bee z:3];
         
         fly = [[Fly alloc] initWithFlyAnimation];
+        [fly setBugSpeed:fly.speed];
         [fly setPosition:ccp(160,200)];
         [self addChild:fly z:3];
         
@@ -84,12 +85,10 @@
     counte++;
     
     //MOVE FLY
-    ranx = [fly moveFlyX: counte high: ranx];
-    rany = [fly moveFlyY: counte high: rany];
+    [fly moveBug:counte];
     
     //MOVE BEE
-    beex = [bee moveBeeX: counte high: beex];
-    beey = [bee moveBeeY: counte high: beey];
+    [bee moveBug:counte];
 }
 
 -(void) startg

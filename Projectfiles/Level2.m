@@ -7,11 +7,10 @@
 //
 
 #import "Level2.h"
-#import "GameOverLayer.h"
-#import "CongratsLayer.h"
-#import "CongratsLayer2.h"
+#import "Congrats.h"
 #import "Plant.h"
 #import "Fly.h"
+#import "Global.h"
 
 @interface Level2 (PrivateMethods)
 @end
@@ -65,6 +64,7 @@
         blueclosedscissors= [[CCTextureCache sharedTextureCache] addImage:@"scissors_closed.png"];
         
         fly = [[Fly alloc] initWithFlyAnimation];
+        [fly setBugSpeed:fly.speed];
         [self addChild:fly z:3];
         
         counte=0;
@@ -144,6 +144,10 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
+            if (levelunlocked < 3)
+            {
+                levelunlocked = 3;
+            }
             [self pauseSchedulerAndActions];
         }
         
@@ -204,8 +208,7 @@
         //MOVE BEE
         if ([self.children containsObject:fly])
         {
-            ranx = [fly moveFlyX: counte high: ranx];
-            rany = [fly moveFlyY: counte high: rany];
+            [fly moveBug:counte];
         }
         else
         {
@@ -266,17 +269,17 @@
 
 -(void) gotogameover
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer2 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) exitGame
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) pauseGame

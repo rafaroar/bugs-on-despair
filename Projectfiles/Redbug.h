@@ -7,14 +7,14 @@
 //
 
 #import "kobold2d.h"
+#import "Bug.h"
 
-@interface Redbug : CCSprite
+@interface Redbug : Bug
 {
     CCAction *move;
     CCAnimation *moving;
     NSMutableArray *redbugs;
 }
+@property float speed;
 -(id) initWithRedbugAnimation;
--(float) moveRedbugX: (int)counte high: (float)ranx;
--(float) moveRedbugY: (int)counte high: (float)rany;
 @end

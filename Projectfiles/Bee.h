@@ -7,14 +7,14 @@
 //
 
 #import "kobold2d.h"
+#import "Bug.h"
 
-@interface Bee : CCSprite
+@interface Bee : Bug
 {
     CCAction *move;
     CCAnimation *moving;
     NSMutableArray *bees;
 }
+@property float speed;
 -(id) initWithBeeAnimation;
--(float) moveBeeX: (int)counte high: (float)ranx;
--(float) moveBeeY: (int)counte high: (float)rany;
 @end

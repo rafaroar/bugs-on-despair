@@ -7,15 +7,14 @@
 //
 
 #import "Level3.h"
-#import "GameOverLayer.h"
-#import "CongratsLayer2.h"
-#import "CongratsLayer3.h"
+#import "Congrats.h"
 #import "Plant.h"
 #import "Missile.h"
 #import "MissilePlant.h"
 #import "Bee.h"
 #import "Fly.h"
 #import "Bomb.h"
+#import "Global.h"
 
 @interface Level3 (PrivateMethods)
 @end
@@ -78,10 +77,12 @@
         plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
         
         bee = [[Bee alloc] initWithBeeAnimation];
+        [bee setBugSpeed:bee.speed];
         [bee setPosition:ccp(160,310)];
         [self addChild:bee z:3];
         
         fly = [[Fly alloc] initWithFlyAnimation];
+        [fly setBugSpeed:fly.speed];
         [fly setPosition:ccp(160,250)];
         [self addChild:fly z:3];
         
@@ -185,6 +186,10 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
+            if (levelunlocked < 4)
+            {
+                levelunlocked = 4;
+            }
             [self pauseSchedulerAndActions];
         }
         
@@ -325,15 +330,10 @@
         }
         
         //MOVE BUGS
-        if ([self.children containsObject:fly])
+        for (int i = 0; i < numm; i ++)
         {
-            ranx = [fly moveFlyX: counte high: ranx];
-            rany = [fly moveFlyY: counte high: rany];
-        }
-        if ([self.children containsObject:bee])
-        {
-            beex = [bee moveBeeX: counte high: beex];
-            beey = [bee moveBeeY: counte high: beey];
+            Bug* bog = [bugs objectAtIndex:i];
+            [bog moveBug:counte];
         }
         if (!([self.children containsObject:fly]||[self.children containsObject:bee]))
         {
@@ -465,17 +465,17 @@
 
 -(void) gotogameover
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer2 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer3 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) exitGame
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer2 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) pauseGame

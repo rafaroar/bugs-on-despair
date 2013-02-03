@@ -7,14 +7,13 @@
 //
 
 #import "Level4.h"
-#import "GameOverLayer.h"
-#import "CongratsLayer5.h"
-#import "CongratsLayer3.h"
+#import "Congrats.h"
 #import "Plant.h"
 #import "Missile.h"
 #import "MissilePlant.h"
 #import "Redbug.h"
 #import "Bomb.h"
+#import "Global.h"
 
 @interface Level4 (PrivateMethods)
 @end
@@ -77,6 +76,7 @@
         plantremains = [[CCTextureCache sharedTextureCache] addImage:@"dark.png"];
         
         fly = [[Redbug alloc] initWithRedbugAnimation];
+        [fly setBugSpeed:fly.speed];
         [self addChild:fly z:3];
         
         counte=0;
@@ -169,6 +169,10 @@
             [announcement setPosition:ccp(160,280)];
             [announcement setScale:0.6f];
             [self addChild:announcement z:5];
+            if (levelunlocked < 5)
+            {
+                levelunlocked = 5;
+            }
             [self pauseSchedulerAndActions];
         }
         
@@ -309,12 +313,12 @@
         }
         
         //MOVE BUGS
-        if ([self.children containsObject:fly])
+        for (int i = 0; i < numm; i ++)
         {
-            ranx = [fly moveRedbugX: counte high: ranx];
-            rany = [fly moveRedbugY: counte high: rany];
+            Bug* bog = [bugs objectAtIndex:i];
+            [bog moveBug:counte];
         }
-        else
+        if (!([self.children containsObject:fly]))
         {
             announcement = [CCSprite spriteWithFile:@"an_gameover.png"];
             [announcement setPosition:ccp(160,280)];
@@ -444,17 +448,17 @@
 
 -(void) gotogameover
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer3 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) gotocongrats
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer5 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) exitGame
 {
-    [[CCDirector sharedDirector] replaceScene: [[CongratsLayer3 alloc] init]];
+    [[CCDirector sharedDirector] replaceScene: [[Congrats alloc] init]];
 }
 
 -(void) pauseGame

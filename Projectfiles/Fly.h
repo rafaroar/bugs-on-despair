@@ -7,15 +7,14 @@
 //
 
 #import "kobold2d.h"
+#import "Bug.h"
 
-@interface Fly : CCSprite
+@interface Fly : Bug
 {
     CCAction *move;
     CCAnimation *moving;
     NSMutableArray *flies;
 }
-
+@property float speed;
 -(id) initWithFlyAnimation;
--(float) moveFlyX: (int)counte high: (float)ranx;
--(float) moveFlyY: (int)counte high: (float)rany;
 @end
