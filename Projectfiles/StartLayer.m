@@ -2,7 +2,7 @@
 //  StartLayer.m
 //  thelifegame1
 //
-//  Created by Andrea Rodríguez Arguedas on 23/01/13.
+//  Created by Rafael Rodríguez Arguedas on 23/01/13.
 //
 //
 

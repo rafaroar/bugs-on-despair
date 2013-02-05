@@ -2,7 +2,7 @@
 //  Redbug.h
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 31/01/13.
+//  Created by Rafael Rodríguez Arguedas on 31/01/13.
 //
 //
 

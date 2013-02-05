@@ -2,7 +2,7 @@
 //  Congrats.h
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 02/02/13.
+//  Created by Rafael Rodríguez Arguedas on 02/02/13.
 //
 //
 

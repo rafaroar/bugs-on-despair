@@ -2,7 +2,7 @@
 //  GameLayer.m
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 03/02/13.
+//  Created by Rafael Rodríguez Arguedas on 03/02/13.
 //
 //
 
@@ -65,8 +65,10 @@
         
         selscissors = [CCSprite spriteWithFile:@"scissors_sel.png"];
         [selscissors setScale:0.1f];
+        [selscissors setPosition:ccp(50,35)];
         redselscissors = [CCSprite spriteWithFile:@"redscissors_sel.png"];
         [redselscissors setScale:0.1f];
+        [redselscissors setPosition:ccp(110,35)];
         [self addChild:selscissors z:1];
         
         CCMenuItemImage *menuItem1 = [CCMenuItemImage itemWithNormalImage:@"pause.png"
@@ -91,204 +93,198 @@
         
         CCMenu *myMenu = [CCMenu menuWithItems:menuItem1, menuItem2, menuItem3, nil];
         menuItem1.position = ccp(240,30);
+        menuItem2.position = ccp(50,35);
+        menuItem3.position = ccp(110,35);
         [menuItem1 setScale:0.4f];
         [menuItem2 setScale:0.1f];
         [menuItem3 setScale:0.1f];
         myMenu.position = ccp(0,0);
         [self addChild: myMenu z:1];
         
-        if (sm.level < 3)
+        if (sm.level > 2)
         {
-            menuItem2.position = ccp(50,35);
-            menuItem3.position = ccp(110,35);
-            [selscissors setPosition:ccp(50,35)];
-            [redselscissors setPosition:ccp(110,35)];
-            
-            if (sm.level == 1)
-            {
-                color = ccc4f(0.2, 0.6, 0.2, 1);
-                difficulty = 20;
-                plants = 15;
-                misses = 0;
-                
-                bee = [[Bee alloc] initWithBeeAnimation];
-                [bee setBugSpeed:bee.speed];
-                [self addChild:bee z:4];
-                [bugs addObject:bee];
-                [allplantsandbugs addObject:bee];
-                
-                announcement2 = [CCSprite spriteWithFile:@"cutplants.png"];
-                [announcement2 setPosition:ccp(110,60)];
-                [announcement2 setScale:0.3f];
-                [self addChild:announcement2 z:5];
-            }
-            else
-            {
-                color = ccc4f(0.1, 0.4, 0.5, 1);
-                difficulty = 18;
-                plants = 22;
-                misses = 0;
-                
-                fly = [[Fly alloc] initWithFlyAnimation];
-                [fly setBugSpeed:fly.speed];
-                [self addChild:fly z:4];
-                [bugs addObject:fly];
-                [allplantsandbugs addObject:fly];
-            }
-        }
-        else
-        {
-            [myMenu addChild:menuItem4];
             menuItem2.position = ccp(40,35);
             menuItem3.position = ccp(90,35);
             menuItem4.position = ccp(140,35);
             [menuItem4 setScale:0.1f];
+            [myMenu addChild:menuItem4];
             [selscissors setPosition:ccp(40,35)];
             [redselscissors setPosition:ccp(90,35)];
             selbomb = [CCSprite spriteWithFile:@"bomb_sel.png"];
             [selbomb setPosition:ccp(140,35)];
             [selbomb setScale:0.1f];
+        }
+    
+        if (sm.level == 1)
+        {
+            color = ccc4f(0.2, 0.6, 0.2, 1);
+            difficulty = 20;
+            plants = 15;
+            misses = 0;
             
-            if (sm.level == 3)
+            bee = [[Bee alloc] initWithBeeAnimation];
+            [bee setBugSpeed:bee.speed];
+            [self addChild:bee z:4];
+            [bugs addObject:bee];
+            [allplantsandbugs addObject:bee];
+            
+            announcement2 = [CCSprite spriteWithFile:@"cutplants.png"];
+            [announcement2 setPosition:ccp(110,60)];
+            [announcement2 setScale:0.3f];
+            [self addChild:announcement2 z:5];
+        }
+        else if (sm.level == 2)
+        {
+            color = ccc4f(0.1, 0.4, 0.5, 1);
+            difficulty = 18;
+            plants = 22;
+            misses = 0;
+            
+            fly = [[Fly alloc] initWithFlyAnimation];
+            [fly setBugSpeed:fly.speed];
+            [self addChild:fly z:4];
+            [bugs addObject:fly];
+            [allplantsandbugs addObject:fly];
+        }
+        else if (sm.level == 3)
+        {
+            color = ccc4f(0.3, 0.7, 0.3, 1);
+            difficulty = 18;
+            plants = 0;
+            misses = 20;
+            
+            bee = [[Bee alloc] initWithBeeAnimation];
+            [bee setBugSpeed:bee.speed];
+            [fly setPosition:ccp(160,310)];
+            [self addChild:bee z:4];
+            [bugs addObject:bee];
+            [allplantsandbugs addObject:bee];
+            
+            fly = [[Fly alloc] initWithFlyAnimation];
+            [fly setBugSpeed:fly.speed];
+            [fly setPosition:ccp(160,250)];
+            [self addChild:fly z:4];
+            [bugs addObject:fly];
+            [allplantsandbugs addObject:fly];
+            
+            announcement2 = [CCSprite spriteWithFile:@"trythebomb.png"];
+            [announcement2 setPosition:ccp(140,60)];
+            [announcement2 setScale:0.3f];
+            [self addChild:announcement2 z:5];
+        }
+        else if (sm.level == 4)
+        {
+            color = ccc4f(0.3, 0.4, 0.5, 1);
+            difficulty = 18;
+            plants = 20;
+            misses = 10;
+            
+            for (int chu = 0; chu < 2; chu ++)
             {
-                color = ccc4f(0.3, 0.7, 0.3, 1);
-                difficulty = 18;
-                plants = 0;
-                misses = 20;
-                
-                bee = [[Bee alloc] initWithBeeAnimation];
-                [bee setBugSpeed:bee.speed];
-                [fly setPosition:ccp(160,310)];
-                [self addChild:bee z:4];
-                [bugs addObject:bee];
-                [allplantsandbugs addObject:bee];
-                
-                fly = [[Fly alloc] initWithFlyAnimation];
-                [fly setBugSpeed:fly.speed];
-                [fly setPosition:ccp(160,250)];
-                [self addChild:fly z:4];
-                [bugs addObject:fly];
-                [allplantsandbugs addObject:fly];
-                
-                announcement2 = [CCSprite spriteWithFile:@"trythebomb.png"];
-                [announcement2 setPosition:ccp(140,60)];
-                [announcement2 setScale:0.3f];
-                [self addChild:announcement2 z:5];
-            }
-            else if (sm.level == 4)
-            {
-                color = ccc4f(0.3, 0.4, 0.5, 1);
-                difficulty = 16;
-                plants = 20;
-                misses = 10;
-                
-                for (int chu = 0; chu < 2; chu ++)
-                {
-                    rbug = [[Redbug alloc] initWithRedbugAnimation];
-                    [rbug setBugSpeed:rbug.speed];
-                    [rbug setPosition:ccp(160,250+chu*60)];
-                    [self addChild:rbug z:4 tag:chu];
-                    [bugs addObject:rbug];
-                    [allplantsandbugs addObject:rbug];
-                }
-            }
-            else if (sm.level == 5)
-            {
-                color = ccc4f(0.6, 0.3, 0.3, 1);
-                difficulty = 13;
-                plants = 30;
-                misses = 20;
-                
-                bee = [[Bee alloc] initWithBeeAnimation];
-                [bee setBugSpeed:bee.speed];
-                [bee setPosition:ccp(160,330)];
-                [self addChild:bee z:4];
-                [bugs addObject:bee];
-                [allplantsandbugs addObject:bee];
-                
-                fly = [[Fly alloc] initWithFlyAnimation];
-                [fly setBugSpeed:fly.speed];
-                [self addChild:fly z:4];
-                [bugs addObject:fly];
-                [allplantsandbugs addObject:fly];
-                
                 rbug = [[Redbug alloc] initWithRedbugAnimation];
                 [rbug setBugSpeed:rbug.speed];
-                [rbug setPosition:ccp(160,230)];
-                [self addChild:rbug z:4];
+                [rbug setPosition:ccp(160,250+chu*60)];
+                [self addChild:rbug z:4 tag:chu];
                 [bugs addObject:rbug];
                 [allplantsandbugs addObject:rbug];
             }
-            else if (sm.level == 6)
+        }
+        else if (sm.level == 5)
+        {
+            color = ccc4f(0.6, 0.3, 0.3, 1);
+            difficulty = 13;
+            plants = 30;
+            misses = 20;
+            
+            bee = [[Bee alloc] initWithBeeAnimation];
+            [bee setBugSpeed:bee.speed];
+            [bee setPosition:ccp(160,330)];
+            [self addChild:bee z:4];
+            [bugs addObject:bee];
+            [allplantsandbugs addObject:bee];
+            
+            fly = [[Fly alloc] initWithFlyAnimation];
+            [fly setBugSpeed:fly.speed];
+            [self addChild:fly z:4];
+            [bugs addObject:fly];
+            [allplantsandbugs addObject:fly];
+            
+            rbug = [[Redbug alloc] initWithRedbugAnimation];
+            [rbug setBugSpeed:rbug.speed];
+            [rbug setPosition:ccp(160,230)];
+            [self addChild:rbug z:4];
+            [bugs addObject:rbug];
+            [allplantsandbugs addObject:rbug];
+        }
+        else if (sm.level == 6)
+        {
+            color = ccc4f(0.2, 0.8, 0.3, 1);
+            difficulty = 11;
+            plants = 60;
+            misses = 0;
+            
+            for (int chu = 0; chu < 11; chu ++)
             {
-                color = ccc4f(0.2, 0.8, 0.3, 1);
-                difficulty = 11;
-                plants = 60;
-                misses = 0;
-                
-                for (int chu = 0; chu < 11; chu ++)
-                {
-                    bee = [[Bee alloc] initWithBeeAnimation];
-                    [bee setBugSpeed:bee.speed];
-                    [bee setPosition:ccp(160,130+chu*30)];
-                    [self addChild:bee z:4 tag:chu];
-                    [bugs addObject:bee];
-                    //[allplantsandbugs addObject:bee];
-                }
-            }
-            else if (sm.level == 7)
-            {
-                color = ccc4f(0.5, 0.6, 0.5, 1);
-                difficulty = 1;
-                plants = 80;
-                misses = 0;
-                
-                fly = [[Fly alloc] initWithFlyAnimation];
-                [fly setBugSpeed:0.004];
-                [self addChild:fly z:4];
-                [bugs addObject:fly];
-                [allplantsandbugs addObject:fly];
-            }
-            else
-            {
-                color = ccc4f(0.4, 0.6, 0.6, 1);
-                difficulty = 8;
-                plants = 70;
-                misses = 30;
-                
-                for (int chu = 0; chu < 7; chu ++)
-                {
-                    bee = [[Bee alloc] initWithBeeAnimation];
-                    [bee setBugSpeed:bee.speed];
-                    [bee setPosition:ccp(120,190+chu*30)];
-                    [self addChild:bee z:4 tag:chu];
-                    [bugs addObject:bee];
-                    //[allplantsandbugs addObject:bee];
-
-                    fly = [[Fly alloc] initWithFlyAnimation];
-                    [fly setBugSpeed:fly.speed];
-                    [fly setPosition:ccp(160,190+chu*30)];
-                    [self addChild:fly z:4];
-                    [bugs addObject:fly];
-                    //[allplantsandbugs addObject:fly];
-
-                    rbug = [[Redbug alloc] initWithRedbugAnimation];
-                    [rbug setBugSpeed:rbug.speed];
-                    [rbug setPosition:ccp(200,190+chu*30)];
-                    [self addChild:rbug z:4];
-                    [bugs addObject:rbug];
-                    //[allplantsandbugs addObject:rbug];
-                }
+                bee = [[Bee alloc] initWithBeeAnimation];
+                [bee setBugSpeed:bee.speed];
+                [bee setPosition:ccp(160,130+chu*30)];
+                [self addChild:bee z:4 tag:chu];
+                [bugs addObject:bee];
+                //[allplantsandbugs addObject:bee];
             }
         }
+        else if (sm.level == 7)
+        {
+            color = ccc4f(0.5, 0.6, 0.5, 1);
+            difficulty = 1;
+            plants = 80;
+            misses = 0;
+            
+            fly = [[Fly alloc] initWithFlyAnimation];
+            [fly setBugSpeed:0.004];
+            [self addChild:fly z:4];
+            [bugs addObject:fly];
+            [allplantsandbugs addObject:fly];
+        }
+        else
+        {
+            color = ccc4f(0.4, 0.6, 0.6, 1);
+            difficulty = 8;
+            plants = 70;
+            misses = 30;
+            
+            for (int chu = 0; chu < 7; chu ++)
+            {
+                bee = [[Bee alloc] initWithBeeAnimation];
+                [bee setBugSpeed:bee.speed];
+                [bee setPosition:ccp(120,190+chu*30)];
+                [self addChild:bee z:4 tag:chu];
+                [bugs addObject:bee];
+                //[allplantsandbugs addObject:bee];
                 
+                fly = [[Fly alloc] initWithFlyAnimation];
+                [fly setBugSpeed:fly.speed];
+                [fly setPosition:ccp(160,190+chu*30)];
+                [self addChild:fly z:4];
+                [bugs addObject:fly];
+                //[allplantsandbugs addObject:fly];
+                
+                rbug = [[Redbug alloc] initWithRedbugAnimation];
+                [rbug setBugSpeed:rbug.speed];
+                [rbug setPosition:ccp(200,190+chu*30)];
+                [self addChild:rbug z:4];
+                [bugs addObject:rbug];
+                //[allplantsandbugs addObject:rbug];
+            }
+        }
+
         total = plants + misses;
-        
+
         announcement = [CCSprite spriteWithFile:[NSString stringWithFormat:@"an_level%d.png",sm.level]];
         [announcement setPosition:ccp(160,280)];
         [announcement setScale:0.6f];
         [self addChild:announcement z:5];
-        
+
         [self scheduleUpdate];
 	}
 	return self;
@@ -513,7 +509,7 @@
         for (int chu = 0; chu < num; chu ++)
         {
             MissilePlant* item = [throwers objectAtIndex:chu];
-            if ((item.thrower==9) && (numm > 0))
+            if ((item.thrower==11) && (numm > 0))
                 item.shoot++;
                 if (item.shoot == 1)
                 {
@@ -536,7 +532,7 @@
                     mm.direcx = k + posx / amp;
                     mm.direcy = posy / amp;
                 }
-            int rrr = arc4random()%150;
+            int rrr = arc4random()%100;
             if(rrr == 0)
             {
                 item.thrower++;
@@ -647,6 +643,7 @@
     [announcement setPosition:ccp(160,280)];
     [announcement setScale:0.6f];
     [self addChild:announcement z:6];
+    [self pauseSchedulerAndActions];
 }
 
 -(void) pauseGame

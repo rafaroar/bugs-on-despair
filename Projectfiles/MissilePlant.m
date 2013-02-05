@@ -2,7 +2,7 @@
 //  MissilePlant.m
 //  flyvsplants1
 //
-//  Created by Andrea Rodríguez Arguedas on 31/01/13.
+//  Created by Rafael Rodríguez Arguedas on 31/01/13.
 //
 //
 
@@ -87,23 +87,10 @@
         if (self.thrower==1)
         {
             [self setTexture: plantex9];
-            self.thrower--;
         }
-        else if (self.thrower==2)
+        else if (self.thrower==4)
         {
             [self setTexture: plantex10];
-            self.thrower--;
-        }
-        else if (self.thrower==3)
-        {
-            if (self.side == 0)
-            {
-                [self setTexture: shooting1];
-            }
-            else
-            {
-                [self setTexture: shootingleft1];
-            }
         }
         else if (self.thrower==7)
         {
@@ -116,7 +103,18 @@
                 [self setTexture: shootingleft1];
             }
         }
-        else if (self.thrower==11)
+        else if (self.thrower==10)
+        {
+            if (self.side == 0)
+            {
+                [self setTexture: shooting2];
+            }
+            else
+            {
+                [self setTexture: shootingleft2];
+            }
+        }
+        else if (self.thrower==13)
         {
             if (self.side == 0)
             {
@@ -127,7 +125,7 @@
                 [self setTexture: shootingleft1];
             }
         }
-        else if (self.thrower==15)
+        else if (self.thrower==16)
         {
             [self setTexture: plantex10];
         }
@@ -135,7 +133,7 @@
         {
             [self setTexture: plantex9];
         }
-        else if (self.thrower==23)
+        else if (self.thrower==22)
         {
             [self setTexture: plantex8];
             self.thrower=-1;
